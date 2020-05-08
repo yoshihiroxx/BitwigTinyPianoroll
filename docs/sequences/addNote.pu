@@ -1,0 +1,36 @@
+@startuml
+actor User
+
+boundary NoteGrid
+boundary Note
+entity NewNoteTool
+collections Selections
+entity BitwigApiSender
+entity BitwigApiListner
+database Store
+database Bitwig
+' collections Foo6
+
+User -> NoteGrid: Click on the grid
+
+activate NoteGrid
+NoteGrid -> Selections: clear()
+NoteGrid -> NoteGrid: gridOfMousePos(x,y)
+NoteGrid -> NewNoteTool: press(gridX, gridY)
+User -> NoteGrid: Drag
+NoteGrid -> NoteGrid: gridOfMousePos(x,y)
+NoteGrid -> NewNoteTool: onDrag(gridX, gridY, note)
+User -> NoteGrid: Release click
+NoteGrid -> NoteGrid: gridOfMousePos(x,y)
+NoteGrid -> NewNoteTool: release(gridX, gridY)
+NewNoteTool -> BitwigApiSender: setNote(x, y, duration)
+BitwigApiSender -> Bitwig: setNote(x, y, duration)
+Bitwig -> BitwigApiListner: addNote(x, y, duration)
+BitwigApiListner -> Store: addNote(x,y,duration)
+Store -> NoteGrid: updateProps()
+deactivate NoteGrid
+
+
+@enduml
+
+クリックした場所がノートだった場合、ノートの選択を行う。

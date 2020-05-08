@@ -1,0 +1,20 @@
+@startuml
+
+
+' bridgeの洗い出し方法
+' 1.抽象的要素(Clip、Shaping)を洗い出す。
+' 2.流動的要素(ClipならBitwigClip, AbletonClip, ShapingはxyModifire, gridModifire)
+
+
+
+class ProjectRecord {
+    bpm
+    app_mode
+}
+
+class Project {
+}
+
+
+
+@enduml

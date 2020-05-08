@@ -1,0 +1,69 @@
+@startuml
+actor User
+
+boundary NoteGrid
+collections Notes
+entity SelectTool
+collections Selections
+entity BitwigApiSender
+entity BitwigApiListner
+database Store
+database Bitwig
+' collections Foo6
+
+User -> NoteGrid: Click on the grid (right click)
+
+activate NoteGrid
+NoteGrid -> NoteGrid: gridOfMousePos(x,y)
+NoteGrid -> Notes: getNotes(gridX, gridYy)
+NoteGrid -> SelectTool: press(gridX, gridY, note)
+alt note
+    SelectTool -> Selections: isCollection(note)
+    alt true
+        SelectTool -> SelectTool: setDragMode('MOVE')
+    else false
+        SelectTool -> Selections: clear()
+        SelectTool -> Selections: add(note)
+        Selections -> NoteGrid:update(selections)
+    end
+else !note
+    alt press Ctrl(Cmd)
+    else unpress Ctrl(Cmd)
+        SelectTool -> Selections: clear()
+    end
+    SelectTool -> SelectTool: setDragMode('SELECT_IN_RECT')
+end
+User -> NoteGrid: Drag
+NoteGrid -> NoteGrid: gridOfMousePos(x,y)
+NoteGrid -> Notes: getNote(x, y)
+NoteGrid -> SelectTool: onDrag(gridX,gridY,note)
+alt Selections.dragMode == 'MOVE'
+else Selections.dragMode == 'SELECT_IN_RECT'
+    SelectTool -> Selections: add(note)
+end
+Selections -> NoteGrid:update(selections)
+
+User -> NoteGrid: Release click
+NoteGrid -> NoteGrid: gridOfMousePos(x,y)
+NoteGrid -> SelectTool: release(gridX, gridY)
+alt Selections.dragMode == 'MOVE'
+    SelectTool -> SelectTool:applyOffset(note, gridX, gridY)
+    SelectTool -> BitwigApiSender: clearNotes(notes)
+    BitwigApiSender -> Bitwig: clearNote(x, y)
+    Bitwig -> BitwigApiListner: clearNote(x, y, duration)
+    BitwigApiListner -> Store: clearNote(x,y,duration)
+    Store -> NoteGrid: updateProps()
+    SelectTool -> BitwigApiSender: addNotes(notes)
+    BitwigApiSender -> Bitwig: addNote(x, y)
+    Bitwig -> BitwigApiListner: addNote(x, y, duration)
+    BitwigApiListner -> Store: addNote(x,y,duration)
+    Store -> NoteGrid: updateProps()
+else Selections.dragMode == 'SELECT_INT_RECT'
+end
+
+deactivate NoteGrid
+
+
+@enduml
+
+クリックした場所がノートだった場合、ノートの選択を行う。

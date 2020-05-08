@@ -1,0 +1,41 @@
+@startuml
+actor User
+
+boundary NoteGrid
+collections Notes
+entity SizeChangeTool
+collections Selections
+entity BitwigApiSender
+entity BitwigApiListner
+database Store
+database Bitwig
+' collections Foo6
+
+User -> NoteGrid: Click on the grid (right click)
+
+activate NoteGrid
+NoteGrid -> Selections: clear()
+NoteGrid -> NoteGrid: gridOfMousePos(x,y)
+NoteGrid -> SizeChangeTool: press(gridX, gridY)
+
+User -> NoteGrid: Drag
+NoteGrid -> NoteGrid: gridOfMousePos(x,y)
+NoteGrid -> Notes: getNote(x, y)
+NoteGrid -> SizeChangeTool: onDrag(gridX,gridY,note)
+SizeChangeTool -> Selections: add(note)
+Selections -> NoteGrid:update(selections)
+
+User -> NoteGrid: Release click
+NoteGrid -> NoteGrid: gridOfMousePos(x,y)
+NoteGrid -> SizeChangeTool: release(gridX, gridY)
+SizeChangeTool -> BitwigApiSender: clearNotes(notes)
+BitwigApiSender -> Bitwig: clearNote(x, y)
+Bitwig -> BitwigApiListner: clearNote(x, y, duration)
+BitwigApiListner -> Store: clearNote(x,y,duration)
+Store -> NoteGrid: updateProps()
+deactivate NoteGrid
+
+
+@enduml
+
+

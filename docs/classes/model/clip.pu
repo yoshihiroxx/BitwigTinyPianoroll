@@ -1,0 +1,76 @@
+@startuml
+
+
+class Track {
+
+}
+
+class MidiListRecord {
+    notes
+}
+
+class MidiList {
+    getNotes()
+    addNote()
+    removeNote()
+}
+
+class ClipRecord {
+    - name
+    - bpm
+    - bars
+    - arr[4] time_signature
+    - events
+    - time_division
+}
+
+class Clip {
+}
+
+class MidiClip {
+
+}
+
+class NoteRecord {
+    - start_beat : float
+    - length_in_beats : float
+    - note_number : int
+    - velocity : int
+    - color : array[3] 
+}
+
+class Note {
+    getStartBeat()
+    getEndBeat()
+    getLengthBeat()
+}
+
+class Shaping {
+    addNote()
+}
+
+class BitwigShaping {
+    osc
+    cfg.grid_num_x
+    cfg.grid_num_y
+    addNote()
+}
+
+
+
+Shaping <-- AbletonShaping
+Shaping <-- BitwigShaping
+ClipRecord <-- Clip
+Clip o-- Shaping
+Client o-- Track
+Clip <-- MidiClip
+Clip <-- AudioClip
+Track o-- ClipRecord
+
+MidiListRecord o-- NoteRecord
+NoteRecord <-- Note
+
+ClipRecord o-- MidiListRecord
+MidiListRecord <-- MidiList
+
+@enduml

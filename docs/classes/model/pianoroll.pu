@@ -1,0 +1,70 @@
+@startuml
+
+
+
+class PianoRoll {
+    key
+    rootNote
+    clef
+    addNote()
+}
+
+class Scrolling {
+    scroll_x
+    scroll_y
+}
+
+class CoordCalc {
+    getNotePitch(mouse_y)
+    getBeatPosition(mouse_y)
+}
+
+class Zooming {
+    zoom
+}
+
+class Tool {
+    onClick()
+    onDrag()
+    onRelease()
+}
+
+class ToolImp {
+}
+
+class ToolImpV1 {
+    drawing_note_duration
+}
+
+
+class DrawerTool {
+
+}
+
+class EraserTool {
+
+}
+
+
+Tool <-- DrawerTool
+Tool <-- EraserTool
+Tool <-- MoveTool
+Tool <-- SelectTool
+Tool <-- StretchTool
+
+Tool o-- CoordCalc
+CoordCalc o-- Scrolling
+CoordCalc o-- Zooming
+PianoRoll o-- Scrolling
+PianoRoll o-- Zooming
+PianoRoll o-- ClipRecord
+
+Editor o-- ClipRecord
+Editor o-- PianoRoll
+PianoRoll o-- Tool
+
+Tool o-- ToolImp
+ToolImp <-- ToolImpV1
+
+
+@enduml
