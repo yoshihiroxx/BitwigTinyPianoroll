@@ -1,0 +1,25 @@
+@startuml
+
+interface IShaping {
+    addNote()
+}
+
+class Shaping {
+    addNote()
+}
+
+class BitwigShaping {
+    addNote()
+}
+
+class OSC {
+    send
+    on
+}
+
+IShaping <-- AbletonShaping
+IShaping <-- BitwigShaping
+IShaping <-- Shaping
+BitwigShaping o-- OSC
+
+@enduml

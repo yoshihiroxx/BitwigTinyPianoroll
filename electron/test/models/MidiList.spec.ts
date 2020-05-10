@@ -1,4 +1,6 @@
-import MidiList from '../../app/models/MidiList';
+import MidiParser from 'midi-parser-js';
+import { promises as fs } from 'fs';
+import MidiList, { createMidiListByMidiFile } from '../../app/models/MidiList';
 import MidiNote from '../../app/models/MidiNote';
 
 describe('Model MidiNote', () => {
@@ -8,14 +10,20 @@ describe('Model MidiNote', () => {
   });
   test('Add a MidiNote to MidiList', () => {
     const mn: MidiNote = new MidiNote({
-      note_number: 133,
-      start_beat: 23.1,
-      length_in_beats: 33.23,
+      noteNumber: 133,
+      startBeat: 23.1,
+      lengthInBeats: 33.23,
       velocity: 122
     });
     let ml: MidiList = new MidiList();
     ml = ml.addNote(mn);
 
     expect(ml.get('notes').get(0)).toMatchObject(mn);
+  });
+  test('Create MidiList by midi file', async () => {
+    const file = await fs.readFile('./test/midi/testpattern.mid', 'base64');
+    const parsedMidi = MidiParser.parse(file);
+    const ml = createMidiListByMidiFile(parsedMidi);
+    expect(ml instanceof MidiList).toBeTruthy();
   });
 });

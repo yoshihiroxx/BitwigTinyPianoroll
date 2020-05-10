@@ -7,14 +7,14 @@ describe('Model MidiNote', () => {
   });
   test('Create New MidiNote', () => {
     const mn = new MidiNote({
-      note_number: 121,
-      start_beat: 0.32,
-      length_in_beats: 10.2,
+      noteNumber: 121,
+      startBeat: 0.32,
+      lengthInBeats: 10.2,
       velocity: 67
     });
-    expect(mn.note_number).toEqual(121);
-    expect(mn.start_beat).toEqual(0.32);
-    expect(mn.length_in_beats).toEqual(10.2);
+    expect(mn.noteNumber).toEqual(121);
+    expect(mn.startBeat).toEqual(0.32);
+    expect(mn.lengthInBeats).toEqual(10.2);
     expect(mn.velocity).toEqual(67);
   });
 });

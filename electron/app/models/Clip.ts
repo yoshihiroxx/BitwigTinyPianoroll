@@ -1,15 +1,21 @@
-import { Record, List } from 'immutable';
+import { Record, RecordOf, List } from 'immutable';
 
-const ClipRecord = Record({
+export type ClipRecordProps = {
+  name: string;
+  lengthInBeats: number;
+  loopLengthInBeats: number;
+  color: List<number>;
+  copyFrom: () => void;
+};
+
+const defaultClipValues: ClipRecordProps = {
   name: '',
-  bpm: 0,
-  notes: List(),
-  bars: 0,
-  time_signature: List(),
-});
+  lengthInBeats: 0,
+  loopLengthInBeats: 1,
+  color: List(),
+  copyFrom: () => undefined
+};
 
-export default class Clip extends ClipRecord {
-  setName(name: string) {
-    return this.set('name', name);
-  }
-}
+const ClipRecord = Record(defaultClipValues);
+
+export default ClipRecord;
