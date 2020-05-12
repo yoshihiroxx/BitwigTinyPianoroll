@@ -1,26 +1,13 @@
 import { Record, List } from 'immutable';
-import { parse } from 'path';
 import MidiNote from './MidiNote';
-import ClipRecord, { ClipRecordProps } from './Clip';
+import { ClipRecordProps } from './Clip';
 import MidiList, { createMidiListByMidiFile } from './MidiList';
-
-export type ParsedMidi = {
-  formatType: number;
-  tracks: number;
-  track: Array<{
-    event: Array<unknown>;
-  }>;
-  timeDivision: number;
-};
-
-function implementsParsedMidi(object: any): object is ParsedMidi {
-  return (
-    'formatType' in object &&
-    'tracks' in object &&
-    'track' in object &&
-    'timeDivision' in object
-  );
-}
+import {
+  ParsedMidi,
+  implementsParsedMidi,
+  implementsMidiEvent,
+  implementsTrackHeaderEvent
+} from './ParsedMidi';
 
 function calcLengthInBeatsFromParsedMidi(parsedMidi: ParsedMidi) {
   let sum = 0;
@@ -28,7 +15,9 @@ function calcLengthInBeatsFromParsedMidi(parsedMidi: ParsedMidi) {
   let midiSequence = List(parsedMidi.track[1].event);
   midiSequence = midiSequence.shift();
   midiSequence.forEach(event => {
-    sum += event.deltaTime;
+    if (implementsMidiEvent(event)) {
+      sum += event.deltaTime;
+    }
   });
   return sum / ppq;
 }
@@ -55,14 +44,16 @@ export default class MidiClip extends MidiClipRecord {
       return this;
     }
     if (implementsParsedMidi(parsedMidiFile)) {
-      const clipName: string = parsedMidiFile.track[1].event[0].data;
-      const midiList = createMidiListByMidiFile(parsedMidiFile);
-      let newRecord = this.set('name', clipName);
-      newRecord = newRecord.set('midiList', midiList);
-      const lengthInBeats = calcLengthInBeatsFromParsedMidi(parsedMidiFile);
-      newRecord = newRecord.set('lengthInBeats', lengthInBeats);
-      newRecord = newRecord.set('loopLengthInBeats', lengthInBeats);
-      return newRecord;
+      if (implementsTrackHeaderEvent(parsedMidiFile.track[1].event[0])) {
+        const clipName: string = parsedMidiFile.track[1].event[0].data;
+        const midiList = createMidiListByMidiFile(parsedMidiFile);
+        let newRecord = this.set('name', clipName);
+        newRecord = newRecord.set('midiList', midiList);
+        const lengthInBeats = calcLengthInBeatsFromParsedMidi(parsedMidiFile);
+        newRecord = newRecord.set('lengthInBeats', lengthInBeats);
+        newRecord = newRecord.set('loopLengthInBeats', lengthInBeats);
+        return newRecord;
+      }
     }
     return this;
   }

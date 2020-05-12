@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Editor.css';
 import routes from '../../constants/routes.json';
+import Pianoroll from '../organisms/PianoRoll';
 
 type Props = {
   increment: () => void;
@@ -25,7 +26,8 @@ export default function Editor(props: Props) {
       <Link to={routes.HOME}>
         <i className="fa fa-arrow-left fa-3x" />
       </Link>
-      <span>I am Pianoroll</span>
+
+      <Pianoroll />
     </div>
   );
 }
