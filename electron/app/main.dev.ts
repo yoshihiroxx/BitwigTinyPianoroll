@@ -61,7 +61,8 @@ const createWindow = async () => {
     webPreferences:
       process.env.NODE_ENV === 'development' || process.env.E2E_BUILD === 'true'
         ? {
-            nodeIntegration: true
+            nodeIntegration: true,
+            nodeIntegrationInWorker: true
           }
         : {
             preload: path.join(__dirname, 'dist/renderer.prod.js')
@@ -116,9 +117,9 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
-ipcMain.on('test', ( event ) => {
+ipcMain.on('test', event => {
   event.sender.send('test', {
     appName: 'hoge',
     appVersion: '1'
-  })
-})
+  });
+});

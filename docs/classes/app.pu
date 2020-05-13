@@ -1,0 +1,14 @@
+@startuml
+
+
+class App {
+    - channel : number
+}
+
+class Store {
+
+}
+
+
+
+@enduml

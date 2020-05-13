@@ -1,7 +1,7 @@
 import { Record, List } from 'immutable';
 import TrackRecord, { TrackRecordType } from './Track';
 
-type ProjectRecordType = {
+export type ProjectRecordType = {
   tracks: List<TrackRecordType>;
 };
 

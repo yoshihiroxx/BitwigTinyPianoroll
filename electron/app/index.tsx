@@ -1,12 +1,37 @@
 import React, { Fragment } from 'react';
 import { render } from 'react-dom';
 import { AppContainer as ReactHotAppContainer } from 'react-hot-loader';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
 import './app.global.css';
+import { loadMidiFile } from './actions/debug';
+import Model from './models/ModelCreator';
 
 const store = configureStore();
+
+const menu = new remote.Menu();
+menu.append(
+  new remote.MenuItem({
+    label: 'Open Debug Clip',
+    click() {
+      store.dispatch(loadMidiFile('testpattern.mid'));
+    }
+  })
+);
+menu.append(new remote.MenuItem({ type: 'separator' }));
+menu.append(
+  new remote.MenuItem({ label: 'MenuItem2', type: 'checkbox', checked: true })
+);
+
+window.addEventListener(
+  'contextmenu',
+  e => {
+    e.preventDefault();
+    menu.popup({ window: remote.getCurrentWindow() });
+  },
+  false
+);
 
 ipcRenderer.send('test');
 ipcRenderer.on('test', (event, arg) => {

@@ -3,6 +3,7 @@
 
 class TrackRecord {
     - channel : number
+    + name: string
 }
 
 class Track {
@@ -20,9 +21,9 @@ class MidiList {
 
 
 class ClipRecord {
-    - name : string
-    - lengthInBeats : number
-    - loopLengthInBeats: number
+    + name : string
+    + lengthInBeats : number
+    + loopLengthInBeats: number
     - color: Array<number>
 }
 
@@ -51,8 +52,22 @@ class MidiNote {
     getLengthBeat()
 }
 
-State <-- Project
+class Editor {
+    + clipID : number
+}
+
+
+Store o-- Project
 Project "1" o-- "0..*" Track
+Store o-- Editor
+Editor o-- ClipRecord
+Editor o-- Tool
+Tool <-- PenTool
+Tool <-- MoveTool
+Tool <-- EraserTool
+Tool <-- SelectTool
+
+
 TrackRecord <-- Track
 Track "1" o-- "0..*" ClipRecord
 
