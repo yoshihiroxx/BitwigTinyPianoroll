@@ -31,7 +31,7 @@ export function createMidiListByMidiFile(parsedMidi: ParsedMidi) {
   let midiSequence = List(parsedMidi.track[1].event);
   midiSequence = midiSequence.shift();
   let noteOnList: List<MidiNote> = List();
-
+  console.log(JSON.stringify(parsedMidi, null, 2));
   midiSequence.forEach(event => {
     if (implementsMidiEvent(event)) {
       sumOfDeltaTime += event.deltaTime;

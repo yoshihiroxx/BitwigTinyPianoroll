@@ -4,7 +4,7 @@ import { History } from 'history';
 import counter from './counter';
 import preferences from './preferences';
 import project from './project';
-import editor from './editor';
+import tool from './tool';
 
 export default function createRootReducer(history: History) {
   // @todo combineReducers
@@ -13,6 +13,6 @@ export default function createRootReducer(history: History) {
     counter,
     project,
     preferences,
-    editor
+    tool
   });
 }

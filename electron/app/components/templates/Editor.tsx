@@ -28,6 +28,7 @@ export default function Editor(props: Props) {
       </Link>
 
       <PianorollContainer />
+      <div>bottom tool bar</div>
     </div>
   );
 }

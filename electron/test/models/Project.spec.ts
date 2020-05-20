@@ -1,4 +1,4 @@
-import Project from '../../app/models/Project';
+import Project, { TrackRecordType } from '../../app/models/Project';
 
 describe('Model Project', () => {
   test('Project Can be loaded', () => {

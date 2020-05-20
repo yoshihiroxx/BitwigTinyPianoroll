@@ -7,15 +7,19 @@ import { configureStore, history } from './store/configureStore';
 import './app.global.css';
 import { loadMidiFile } from './actions/debug';
 import Model from './models/ModelCreator';
+import Project from './models/Project';
+import initMainMenu from './menu/MainMenu';
 
 const store = configureStore();
+
+initMainMenu(store);
 
 const menu = new remote.Menu();
 menu.append(
   new remote.MenuItem({
     label: 'Open Debug Clip',
     click() {
-      store.dispatch(loadMidiFile('testpattern.mid'));
+      store.dispatch(loadMidiFile('maschine-pattern2.mid'));
     }
   })
 );

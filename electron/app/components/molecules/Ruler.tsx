@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styles from './Editor.css';
+import styles from './Ruler.css';
 import routes from '../../constants/routes.json';
 import Pianoroll from '../organisms/PianoRoll';
 
@@ -24,5 +24,5 @@ export default function Ruler(props: Props) {
     counter
   } = props;
 
-  return <div>i am ruler</div>;
+  return <div className={styles.ruler}>i am ruler</div>;
 }

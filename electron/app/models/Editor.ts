@@ -1,19 +1,13 @@
 import { Record, List } from 'immutable';
 
 export type EditorRecordType = {
-  name: string;
-  lengthInBeats: number;
-  loopLengthInBeats: number;
-  color: List<number>;
-  copyFrom: () => void;
+  trackId: number;
+  clipId: number;
 };
 
 const defaultState: EditorRecordType = {
-  name: '',
-  lengthInBeats: 0,
-  loopLengthInBeats: 1,
-  color: List(),
-  copyFrom: () => undefined
+  trackId: 0,
+  clipId: 0
 };
 
 const Editor = Record(defaultState);

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import styles from './Editor.css';
+import styles from './NoteLabelBar.css';
 
 type Props = {
   scale: {
@@ -21,5 +20,16 @@ export default function NoteLabelBar(props: Props) {
     counter
   } = props;
 
-  return <div>note label bar.</div>;
+  return (
+    <div className={styles.noteLabelBar}>
+      <ul>
+        <li>F5</li>
+        <li>D5</li>
+        <li>B4</li>
+        <li>G4</li>
+        <li>E4</li>
+        <li>C4</li>
+      </ul>
+    </div>
+  );
 }
