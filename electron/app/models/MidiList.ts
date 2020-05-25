@@ -31,7 +31,6 @@ export function createMidiListByMidiFile(parsedMidi: ParsedMidi) {
   let midiSequence = List(parsedMidi.track[1].event);
   midiSequence = midiSequence.shift();
   let noteOnList: List<MidiNote> = List();
-  console.log(JSON.stringify(parsedMidi, null, 2));
   midiSequence.forEach(event => {
     if (implementsMidiEvent(event)) {
       sumOfDeltaTime += event.deltaTime;
@@ -62,10 +61,9 @@ export function createMidiListByMidiFile(parsedMidi: ParsedMidi) {
               result = result.addNote(mn);
               noteOnList = noteOnList.remove(index);
             } else {
-              console.log(
-                'invalide data has supplied. check event has given data is correct below.'
+              throw new Error(
+                `${event}invalide data has supplied. check event has given data is correct below.`
               );
-              console.log(event);
             }
           }
           break;

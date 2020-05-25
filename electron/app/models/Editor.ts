@@ -1,15 +1,20 @@
 import { Record, List } from 'immutable';
+import Project, { ProjectRecordType } from './Project';
+import Tool, { ToolRecordType } from '../tool/Tool';
+import PenTool from '../tool/PenTool';
 
 export type EditorRecordType = {
-  trackId: number;
-  clipId: number;
+  project: ProjectRecordType;
+  tool: ToolRecordType;
 };
 
 const defaultState: EditorRecordType = {
-  trackId: 0,
-  clipId: 0
+  project: new Project(),
+  tool: new PenTool()
 };
 
-const Editor = Record(defaultState);
+const EditorRecord = Record(defaultState);
+
+class Editor extends EditorRecord {}
 
 export default Editor;

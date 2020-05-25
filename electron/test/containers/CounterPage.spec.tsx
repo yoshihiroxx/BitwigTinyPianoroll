@@ -11,7 +11,7 @@ import Model from '../../app/models/ModelCreator';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-function setup(initialState = { project: Record() }) {
+function setup(initialState = {}) {
   const store = configureStore(initialState);
   const history = createBrowserHistory();
   const provider = (

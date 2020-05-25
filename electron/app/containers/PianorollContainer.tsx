@@ -3,12 +3,11 @@ import { connect } from 'react-redux';
 import Pianoroll, {
   PianorollStateType
 } from '../components/organisms/PianoRoll';
-import { handleEvent } from '../actions/tool';
+import { handleEvent, handleTool, onMouseEvent } from '../actions/tool';
 import MidiClip from '../models/MidiClip';
 import { ModelType } from '../models/ModelCreator';
 
 function mapStateToProps(state: ModelType) {
-  console.log(state.project.tracks.getIn([0, 0]));
   return {
     cref: 'he',
     crefRoot: 4,
@@ -19,7 +18,8 @@ function mapStateToProps(state: ModelType) {
         values: [0, 2, 4, 5, 7, 9, 11]
       }
     },
-    clip: state.project.tracks.getIn([0, 0]),
+    clip: state.editor.project.tracks.getIn([0, 0]),
+    tool: state.editor.tool,
     zoom: {
       x: 1,
       y: 1
@@ -34,7 +34,8 @@ function mapStateToProps(state: ModelType) {
 function mapDispatchToProps(dispatch: Dispatch) {
   return bindActionCreators(
     {
-      handleEvent
+      handleTool,
+      onMouseEvent
     },
     dispatch
   );

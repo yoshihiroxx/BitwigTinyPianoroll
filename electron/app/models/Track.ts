@@ -9,4 +9,8 @@ const TrackRecord = Record<TrackRecordType>({
   clips: List()
 });
 
-export default class Track extends TrackRecord {}
+export default class Track extends TrackRecord {
+  getClip(id: number) {
+    return this.getIn(['tracks', id]);
+  }
+}

@@ -9,3 +9,10 @@ export type GetState = () => counterStateType;
 export type Dispatch = ReduxDispatch<Action<string>>;
 
 export type Store = ReduxStore<counterStateType, Action<string>>;
+
+export type ActionType = {
+  type: string;
+  payload: any;
+  meta: any;
+  error: boolean;
+};

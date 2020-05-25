@@ -16,7 +16,6 @@ describe('Model MidiClip', () => {
     expect(mc.get('name')).toEqual(clipName);
     expect(mc.get('lengthInBeats')).toEqual(4);
     expect(mc.get('loopLengthInBeats')).toEqual(4);
-    console.log(mc.get('midiList').toJS());
   });
 
   test('Add Multiple Midi Notes to MidiClip', () => {

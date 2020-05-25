@@ -1,10 +1,11 @@
 import { List } from 'immutable';
 import MidiNote from '../models/MidiNote';
+import MidiList from '../models/MidiList';
 import Tool from './Tool';
 
 export default class PenTool extends Tool {
   onClick(beat: number, noteNum: number) {
-    // @todo move note to select layer
+    const nextState = this.setIsDrawing(true);
     const note = new MidiNote({
       noteNumber: noteNum,
       startBeat: beat,
@@ -14,16 +15,35 @@ export default class PenTool extends Tool {
     const newDrawing = this.get('drawing')
       .get('notes')
       .set(0, note);
-    return this.setIn(['drawing', 'notes'], newDrawing);
+    return nextState.setIn(['drawing', 'notes'], newDrawing);
   }
 
   onDrag(beat: number, noteNum: number) {
-    return this.onClick(beat, noteNum);
-    // @todo update note pos and rerender
+    if (this.get('isDrawing')) {
+      return this.onClick(beat, noteNum);
+    }
+    return this;
   }
 
   onRelease(beat: number, noteNum: number) {
-    // @todo add Note
-    return this.onClick(beat, noteNum);
+    const nextState = this.setIsDrawing(false);
+    const note = new MidiNote({
+      noteNumber: noteNum,
+      startBeat: beat,
+      lengthInBeats: this.get('noteLength')
+    });
+
+    const newDrawing = this.get('drawing')
+      .get('notes')
+      .set(0, note);
+    return nextState.setIn(['drawing', 'notes'], newDrawing);
+  }
+
+  setIsDrawing(nextProp: boolean) {
+    return this.set('isDrawing', nextProp);
+  }
+
+  prepareToChange() {
+    return this.set('drawing', new MidiList());
   }
 }
