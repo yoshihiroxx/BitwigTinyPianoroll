@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
-    <title>lv1/icons/pen copy</title>
+    <title>icons/eraser</title>
     <desc>Created with Sketch.</desc>
     <defs></defs>
-    <g id="lv1/icons/pen-copy" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <path d="M7.74847584,3.19682541 C7.11334837,3.19682541 6.59847584,3.71169794 6.59847584,4.34682541 L6.59847584,20.6531746 C6.59847584,21.2883021 7.11334837,21.8031746 7.74847584,21.8031746 L11.9690386,21.8031746 C14.813305,21.8031746 17.1190386,19.4974411 17.1190386,16.6531746 L17.1190386,4.34682541 C17.1190386,3.71169794 16.604166,3.19682541 15.9690386,3.19682541 L7.74847584,3.19682541 Z" id="Rectangle" stroke="#E0E0E0" stroke-width="1.7" transform="translate(11.858757, 12.500000) rotate(45.000000) translate(-11.858757, -12.500000) "></path>
-        <rect id="Rectangle-Copy" fill="#E0E0E0" transform="translate(14.608757, 9.750000) rotate(45.000000) translate(-14.608757, -9.750000) " x="8.49847584" y="3.4859127" width="12.2205627" height="12.5281746" rx="2"></rect>
+    <g id="icons/eraser" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="near_me-24px" transform="translate(7.500000, 7.500000) scale(-1, 1) translate(-7.500000, -7.500000) ">
+            <polygon id="Shape" points="0 0 15 0 15 15 0 15"></polygon>
+            <polygon id="Shape" stroke="#000000" fill="#E0E0E0" fill-rule="nonzero" stroke-linecap="round" stroke-linejoin="round" points="13 2 2 6.60166667 2 7.20055556 6.18 8.82 7.79333333 13 8.39222222 13"></polygon>
+        </g>
+        <g id="cancel-24px" transform="translate(8.000000, 7.000000)">
+            <path d="M12,2 C6.47,2 2,6.47 2,12 C2,17.53 6.47,22 12,22 C17.53,22 22,17.53 22,12 C22,6.47 17.53,2 12,2 Z M17,15.59 L15.59,17 L12,13.41 L8.41,17 L7,15.59 L10.59,12 L7,8.41 L8.41,7 L12,10.59 L15.59,7 L17,8.41 L13.41,12 L17,15.59 Z" id="Shape" stroke="#000000" fill="#D0021B" fill-rule="nonzero"></path>
+            <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
+        </g>
     </g>
 </svg>

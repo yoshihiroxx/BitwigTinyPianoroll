@@ -15,12 +15,33 @@ const MidiListRecord = Record<MidiListRecordType>({
 });
 
 export default class MidiList extends MidiListRecord {
-  addNote(midiNote: MidiNote) {
+  public addNote(midiNote: MidiNote) {
     return this.set('notes', this.notes.push(midiNote));
   }
 
-  getNotes() {
+  public setNotes(notes: List<MidiNote>) {
+    return this.set('notes', notes);
+  }
+
+  public getNotes() {
     return this.notes;
+  }
+
+  public hasNote(note: MidiNote) {
+    const found = this.get('notes').find(n => {
+      return n.equals(note);
+    });
+    return found instanceof MidiNote;
+  }
+
+  public sortNoteToFirst(note: MidiNote) {
+    const nextNotes = this.get('notes').sort(n => {
+      if (n.equals(note)) {
+        return -1;
+      }
+      return 0;
+    });
+    return this.set('notes', nextNotes);
   }
 }
 

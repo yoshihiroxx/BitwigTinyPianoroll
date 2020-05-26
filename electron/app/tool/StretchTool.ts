@@ -3,7 +3,7 @@ import MidiNote from '../models/MidiNote';
 import MidiList from '../models/MidiList';
 import Tool from './Tool';
 
-export default class LengthTool extends Tool {
+export default class StretchTool extends Tool {
   onClick(beatOrNote: any, noteNumber?: number) {
     const nextState = this.setIsDrawing(true);
     if (typeof beatOrNote === 'number') {

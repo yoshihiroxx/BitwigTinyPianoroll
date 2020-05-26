@@ -6,9 +6,10 @@ import Tool from './Tool';
 export default class EraserTool extends Tool {
   public onClick(beatOrNote: any, noteNum?: number) {
     // @todo move note to select layer
-    const nextState = this.setIsDrawing(true);
+    let nextState = this.setIsDrawing(true);
     if (beatOrNote instanceof MidiNote) {
-      this.selections.find((note, id) => {});
+      nextState = nextState.set('selections', new MidiList());
+      this.getIn(['selections', 'notes']).find((note, id) => {});
     } else if (typeof beatOrNote === 'number' && typeof noteNum === 'number') {
       console.log('nothing to do when clicked on grid with a EraserTool.');
     }
@@ -31,17 +32,6 @@ export default class EraserTool extends Tool {
     } else if (typeof beatOrNote === 'number' && typeof noteNum === 'number') {
       return this;
     }
-    // if drawing
-    // findNote()
-    // if !select add note to selection
-    // const note = this.getIn(['notes', 'notes']).find((n, id) => {
-    //   const from = n.get('startBeat');
-    //   const to = from + n.get('lengthInBeats');
-    //   if (n.get('noteNumber') === noteNum) {
-    //     return !!(beatOrNote >= from && beatOrNote <= to);
-    //   }
-    //   return false;
-    // });
     return this;
   }
 

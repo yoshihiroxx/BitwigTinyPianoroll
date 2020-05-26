@@ -1,7 +1,6 @@
 import { Action } from 'redux';
 import { ActionType } from './types';
-import PenTool from '../tool/PenTool';
-import EraserTool from '../tool/EraserTool';
+import { PenTool, EraserTool, MoveTool, RectTool } from '../tool/Tools';
 import {
   HANDLE_MOUSE_EVENT,
   HANDLE_TOOL,
@@ -55,19 +54,23 @@ export default function tool(state = new PenTool(), action: Actions) {
       //   nextState = nextState.set('isDrawing', false);
       //   nextState = nextState.set('drawing', new MidiList());
       // }
-
+      console.log(action.meta.toolType);
       if (state.get('isDrawing')) return state;
       switch (action.meta.toolType) {
-        case 'pen': {
-          const penTool = new PenTool(state.prepareToChange());
-          return penTool;
-        }
-        case 'eraser': {
-          const eraserTool = new EraserTool(state.prepareToChange());
-          return eraserTool;
-        }
+        case 'pen':
+          return new PenTool(state.prepareToChange());
+
+        case 'eraser':
+          return new EraserTool(state.prepareToChange());
+
+        case 'move':
+          return new MoveTool(state.prepareToChange());
+
+        case 'rect':
+          return new RectTool(state.prepareToChange());
+
         default:
-          return nextState;
+          return state;
       }
     }
     default:

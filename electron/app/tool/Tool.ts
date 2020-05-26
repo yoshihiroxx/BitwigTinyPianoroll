@@ -9,6 +9,10 @@ export type ToolRecordType = {
   drawing: MidiList;
   noteLength: number;
   isDrawing: boolean;
+  eventStart: {
+    beat: number;
+    noteNumber: number;
+  };
 };
 
 export const ToolRecord = Record<ToolRecordType>({
@@ -16,7 +20,11 @@ export const ToolRecord = Record<ToolRecordType>({
   selections: new MidiList(),
   drawing: new MidiList(),
   noteLength: 1,
-  isDrawing: false
+  isDrawing: false,
+  eventStart: {
+    beat: 0,
+    noteNumber: 0
+  }
 });
 
 export default class Tool extends ToolRecord {
@@ -66,5 +74,9 @@ export default class Tool extends ToolRecord {
 
   public prepareToChange() {
     return this.set('isDrawing', false);
+  }
+
+  protected setIsDrawing(nextProp: boolean) {
+    return this.set('isDrawing', nextProp);
   }
 }

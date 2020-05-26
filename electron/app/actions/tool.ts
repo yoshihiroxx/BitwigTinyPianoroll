@@ -1,12 +1,10 @@
 import { List } from 'immutable';
 import MidiClip from '../models/MidiClip';
 import MidiNote from '../models/MidiNote';
-import PenTool from '../tool/PenTool';
-import EraserTool from '../tool/EraserTool';
-import MoveTool from '../tool/MoveTool';
+import { PenTool, EraserTool, MoveTool, RectTool } from '../tool/Tools';
+
 import StretchTool from '../tool/StretchTool';
 import LengthTool from '../tool/LengthTool';
-import RectTool from '../tool/RectTool';
 import { GetState, Dispatch } from '../reducers/types';
 
 export const HANDLE_CLICK = 'HANDLE_CLICK';
