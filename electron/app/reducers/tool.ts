@@ -1,6 +1,12 @@
 import { Action } from 'redux';
 import { ActionType } from './types';
-import { PenTool, EraserTool, MoveTool, RectTool } from '../tool/Tools';
+import {
+  PenTool,
+  EraserTool,
+  MoveTool,
+  RectTool,
+  LengthTool
+} from '../tool/Tools';
 import {
   HANDLE_MOUSE_EVENT,
   HANDLE_TOOL,
@@ -69,7 +75,11 @@ export default function tool(state = new PenTool(), action: Actions) {
         case 'rect':
           return new RectTool(state.prepareToChange());
 
+        case 'length':
+          return new LengthTool(state.prepareToChange());
+
         default:
+          throw new Error(`${action.meta.toolType}: This tool is not defined.`);
           return state;
       }
     }

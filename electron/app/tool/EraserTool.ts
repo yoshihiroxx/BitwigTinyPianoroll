@@ -7,8 +7,8 @@ export default class EraserTool extends Tool {
   public onClick(beatOrNote: any, noteNum?: number) {
     // @todo move note to select layer
     let nextState = this.setIsDrawing(true);
+    nextState = nextState.set('selections', new MidiList());
     if (beatOrNote instanceof MidiNote) {
-      nextState = nextState.set('selections', new MidiList());
       this.getIn(['selections', 'notes']).find((note, id) => {});
     } else if (typeof beatOrNote === 'number' && typeof noteNum === 'number') {
       console.log('nothing to do when clicked on grid with a EraserTool.');

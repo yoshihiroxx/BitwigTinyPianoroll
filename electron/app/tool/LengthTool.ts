@@ -4,51 +4,48 @@ import MidiList from '../models/MidiList';
 import Tool from './Tool';
 
 export default class LengthTool extends Tool {
-  onClick(beatOrNote: any, noteNumber?: number) {
+  onClick(beatOrNote: unknown, noteNumber?: number) {
     const nextState = this.setIsDrawing(true);
-    if (typeof beatOrNote === 'number') {
-      const note = new MidiNote({
-        noteNumber,
-        startBeat: beatOrNote,
-        lengthInBeats: this.get('noteLength')
-      });
-
-      const newDrawing = this.get('drawing')
-        .get('notes')
-        .set(0, note);
-      return nextState.setIn(['drawing', 'notes'], newDrawing);
-    }
     if (beatOrNote instanceof MidiNote) {
-      return this;
+      const note = beatOrNote;
+      let selections = this.get('selections');
+      if (!selections.hasNote(note)) {
+        selections = new MidiList({ notes: List([note]) });
+      }
+      selections = selections.sortNoteToFirst(note);
+      const drawing = selections;
+      return nextState.set('selections', selections).set('drawing', drawing);
     }
+    return this;
   }
 
-  onDrag(beat: number, noteNum: number) {
-    if (this.get('isDrawing')) {
-      return this.onClick(beat, noteNum);
+  onDrag(beatOrNote: unknown, noteNumber?: number) {
+    if (!this.get('isDrawing')) return this;
+    if (typeof beatOrNote === 'number' && typeof noteNumber === 'number') {
+      const clicked: MidiNote = this.getIn(['drawing', 'notes']).first();
+      const offsetBeat =
+        beatOrNote - clicked.get('startBeat') - clicked.get('lengthInBeats');
+      const nextDrawingList = this.getIn(['drawing', 'notes']).map(
+        (n: MidiNote) => {
+          return n.set('lengthInBeats', n.get('lengthInBeats') + offsetBeat);
+        }
+      );
+      return this.setIn(['drawing', 'notes'], nextDrawingList);
     }
     return this;
   }
 
   onRelease(beat: number, noteNum: number) {
     const nextState = this.setIsDrawing(false);
-    const note = new MidiNote({
-      noteNumber: noteNum,
-      startBeat: beat,
-      lengthInBeats: this.get('noteLength')
-    });
-
-    const newDrawing = this.get('drawing')
-      .get('notes')
-      .set(0, note);
-    return nextState.setIn(['drawing', 'notes'], newDrawing);
-  }
-
-  setIsDrawing(nextProp: boolean) {
-    return this.set('isDrawing', nextProp);
+    return nextState;
   }
 
   prepareToChange() {
-    return this.set('drawing', new MidiList());
+    let selections = this.get('selections');
+    if (this.getIn(['drawing', 'notes']).size > 0) {
+      selections = this.get('drawing');
+    }
+    const drawing = new MidiList();
+    return this.set('selections', selections).set('drawing', drawing);
   }
 }

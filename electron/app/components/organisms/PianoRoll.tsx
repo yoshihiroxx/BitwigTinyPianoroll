@@ -8,15 +8,17 @@ import NoteLabelBar from '../molecules/NoteLabelBar';
 import MidiList from '../../models/MidiList';
 import styles from './PianoRoll.css';
 import keyCode from '../../keycode';
-import Config from '../../confg';
+import Config from '../../config';
 import {
   Tool,
   PenTool,
   EraserTool,
   MoveTool,
-  RectTool
+  RectTool,
+  LengthTool
 } from '../../tool/Tools';
 import MidiNote from '../../models/MidiNote';
+import { handleEvent } from '../../actions/tool';
 
 export type PianorollStateType = {
   onClick: () => void;
@@ -52,6 +54,8 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
 
   scale: Array<number>;
 
+  keySignature: Array<number>;
+
   domSize: {
     x: number;
     y: number;
@@ -67,6 +71,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     super(props);
     this.magnet = true;
     this.scale = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6];
+    this.keySignature = [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0];
     this.domSize = {
       x: 1,
       y: 1
@@ -74,7 +79,9 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     this.canvas = new pixi.Application({
       width: 700,
       height: 256,
-      forceCanvas: true
+      forceCanvas: true,
+      antialias: true,
+      resolution: 2
     });
     this.layers = {
       selectionItems: new pixi.Container(),
@@ -96,7 +103,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
 
     this.layers.grid.on('pointerover', event => {
       const { tool } = this.props;
-      if (tool instanceof MoveTool) {
+      if (tool instanceof MoveTool || tool instanceof LengthTool) {
         this.props.handleTool('pen');
       }
     });
@@ -157,18 +164,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     this.renderMidiNotes();
     this.renderSelectionNote();
     this.renderDrawingNote();
-    const { tool } = this.props;
-    if (tool instanceof PenTool) {
-      this.layers.grid.cursor = "url('./images/icons/pen.svg') 3 2, auto";
-    } else if (tool instanceof EraserTool) {
-      this.layers.grid.cursor = "url('./images/icons/eraser.svg') 3 2,auto";
-    } else if (tool instanceof MoveTool) {
-      this.layers.grid.cursor = "url('./images/icons/move.svg') 3 2,auto";
-    } else if (tool instanceof RectTool) {
-      this.layers.grid.cursor = "url('./images/icons/rect.svg') 3 2,auto";
-    } else {
-      throw new Error(`${tool}: this tool functions has not implemented yet.`);
-    }
+    this.setupCursorTextures(this.layers.grid);
   }
 
   onKeyDown(e) {
@@ -197,6 +193,24 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
         handleTool('pen');
       }
     });
+  }
+
+  private setupCursorTextures(g: pixi.Graphics | pixi.Container) {
+    const { tool } = this.props;
+    const graphics = g;
+    if (tool instanceof PenTool) {
+      graphics.cursor = "url('./images/icons/pen.svg') 3 2, auto";
+    } else if (tool instanceof EraserTool) {
+      graphics.cursor = "url('./images/icons/eraser.svg') 3 2,auto";
+    } else if (tool instanceof MoveTool) {
+      graphics.cursor = "url('./images/icons/move.svg') 12 12,auto";
+    } else if (tool instanceof RectTool) {
+      graphics.cursor = "url('./images/icons/rect.svg') 12 12,auto";
+    } else if (tool instanceof LengthTool) {
+      graphics.cursor = "url('./images/icons/length.svg') 12 12,auto";
+    } else {
+      throw new Error(`${tool}: this tool functions has not implemented yet.`);
+    }
   }
 
   resize() {
@@ -239,7 +253,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
 
     const octave = Math.floor(offsetFromRootNote / 7) * 12;
     const rootNoteNum = 12 * 9;
-    return rootNoteNum + octave + scaleIndex;
+    return rootNoteNum + octave + scaleIndex + this.keySignature[scaleIndex];
   }
 
   renderGridLines() {
@@ -290,7 +304,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     const { tool } = this.props;
     if (tool instanceof Tool) {
       const notes = tool.getIn(['notes', 'notes']);
-      this.renderMidiNotesV2(notes, 0xffff44, true);
+      this.renderMidiNotesV2(notes, 0x44dd44, true);
     } else {
       console.log('clip are not choosen');
     }
@@ -303,7 +317,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     }
     const drawing = tool.get('drawing');
     const notes = drawing.get('notes');
-    this.renderMidiNotesV2(notes, 0xff0000, false);
+    this.renderMidiNotesV2(notes, 0xaf00af, false);
   }
 
   renderSelectionNote() {
@@ -312,7 +326,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
       throw new Error(`${tool} is not a Instance of Tool`);
     }
     const notes = tool.getIn(['selections', 'notes']);
-    this.renderMidiNotesV2(notes, 0x4fff3f, false);
+    this.renderMidiNotesV2(notes, 0xdddd88, false);
   }
 
   renderMidiNotesV2(
@@ -327,11 +341,23 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
       const rect = new pixi.Graphics();
       rect.beginFill(color);
       // set the line style to have a width of 5 and set the color to red
-      rect.lineStyle(1, 0x69357f);
+      rect.lineStyle(1, color + 0x202020);
       // draw a rectangle
       const rootY = height * 18 - height * 0.5;
       const rootNoteNum = 12 * 9;
       // const offsetY = (note.get('noteNumber') - rootNoteNum) * height;
+      const keyNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+      const keyName = keyNames[this.scale[note.get('noteNumber') % 12]];
+      console.log(keyName);
+      const style = new pixi.TextStyle({
+        fontFamily: 'Arial',
+        fontSize: 11,
+        fontWeight: 'normal',
+        fill: ['#000000'] // gradient
+        // stroke: '#332244',
+        // strokeThickness: 5
+      });
+      const keyNameText = new pixi.Text(keyName, style);
 
       const offsetOctave = Math.floor(
         (note.get('noteNumber') - rootNoteNum) / 12
@@ -346,23 +372,36 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
         note.get('lengthInBeats') * width,
         height
       );
+      rect.endFill();
+      const isSemitone = this.keySignature[note.get('noteNumber') % 12];
+      if (isSemitone > 0) {
+        rect.beginFill(color + 0x202020);
+        rect.lineStyle(2, color - 0x303030, 1);
+        const x = note.get('startBeat') * width;
+        const y = rootY - offsetY + 3;
+        rect.moveTo(x, y);
+        rect.lineTo(x + 5, y - 8);
+        rect.lineTo(x + 10, y);
+        rect.lineTo(x, y);
+        rect.endFill();
+      }
+
+      keyNameText.x = note.get('startBeat') * width + 1;
+      keyNameText.y = rootY - offsetY + 1;
+
+      const noteEdge = new pixi.Graphics();
+      // noteEdge.beginFill(0xd23456);
+      // noteEdge.drawRect(
+      //   (note.get('startBeat') + note.get('lengthInBeats')) * width - 5,
+      //   rootY - offsetY,
+      //   5,
+      //   height
+      // );
 
       if (interactive) {
         rect.interactive = true;
-        const { tool } = this.props;
-        if (tool instanceof PenTool) {
-          rect.cursor = "url('./images/icons/pen.svg') 3 2, auto";
-        } else if (tool instanceof EraserTool) {
-          rect.cursor = "url('./images/icons/eraser.svg') 3 2,auto";
-        } else if (tool instanceof MoveTool) {
-          rect.cursor = "url('./images/icons/move.svg') 12 12,auto";
-        } else if (tool instanceof RectTool) {
-          rect.cursor = "url('./images/icons/rect.svg') 12 12,auto";
-        } else {
-          throw new Error(
-            `${tool}: this tool functions has not implemented yet.`
-          );
-        }
+        noteEdge.interactive = true;
+        this.setupCursorTextures(rect);
         // rect.buttonMode = true;
         rect.hitArea = new pixi.Rectangle(
           note.get('startBeat') * width,
@@ -371,12 +410,21 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
           height
         );
 
+        this.setupCursorTextures(noteEdge);
+        noteEdge.hitArea = new pixi.Rectangle(
+          (note.get('startBeat') + note.get('lengthInBeats')) * width - 5,
+          rootY - offsetY,
+          5,
+          height
+        );
+
         const { onMouseEvent } = this.props;
         const { handleTool } = this.props;
+        const { tool } = this.props;
         rect.on('pointerover', event => {
           onMouseEvent('drag', note);
-          if (tool instanceof PenTool) {
-            this.props.handleTool('move');
+          if (tool instanceof PenTool || tool instanceof LengthTool) {
+            handleTool('move');
           }
         });
         rect.on('pointerout', event => {
@@ -388,9 +436,20 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
         rect.on('pointerup', event => {
           onMouseEvent('release', note);
         });
+
+        noteEdge.on('pointerover', event => {
+          if (tool instanceof PenTool || tool instanceof MoveTool) {
+            handleTool('length');
+          }
+        });
+        noteEdge.on('pointerdown', event => {
+          onMouseEvent('click', note);
+        });
       }
 
       this.layers.notes.addChild(rect);
+      this.layers.notes.addChild(noteEdge);
+      this.layers.notes.addChild(keyNameText);
     });
   }
 

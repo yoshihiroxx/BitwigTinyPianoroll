@@ -99,6 +99,10 @@ function handleMouseRelease(
       selections.get('notes').forEach((note: MidiNote) => {
         dispatch(removeNote(note));
       });
+    } else if (tool instanceof LengthTool) {
+      selections.get('notes').forEach((note: MidiNote) => {
+        dispatch(removeNote(note));
+      });
     }
 
     const drawing = editor.getIn(['tool', 'drawing']);
@@ -107,6 +111,10 @@ function handleMouseRelease(
         dispatch(addNote(note));
       });
     } else if (tool instanceof MoveTool) {
+      drawing.get('notes').forEach((note: MidiNote) => {
+        dispatch(addNote(note));
+      });
+    } else if (tool instanceof LengthTool) {
       drawing.get('notes').forEach((note: MidiNote) => {
         dispatch(addNote(note));
       });
