@@ -2,3 +2,9 @@
   width: 100%;
   background: #999;
 }
+
+.ruler canvas {
+  width: 100%;
+  height: 18px;
+  vertical-align: bottom;
+}

@@ -1,3 +1,15 @@
 .noteLabelBar {
   background: #333;
+  /* width: 70px; */
+}
+
+.noteLabelBar ul{
+  padding:0 5px;
+  margin-top: 111px;
+}
+
+li{
+  font-size: 12px;
+  height: 25px;
+  color: #999;
 }

@@ -72,6 +72,7 @@ export default class RectTool extends Tool {
       return (
         n.get('startBeat') < endBeat && n.get('noteNumber') < endNoteNumber
       );
+      [];
     });
     return notes;
   }

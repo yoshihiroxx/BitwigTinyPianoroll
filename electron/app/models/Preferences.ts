@@ -1,4 +1,6 @@
 import { Record } from 'immutable';
+import KeyBinds from './KeyBinds';
+import Theme from './Theme';
 
 // @todo write tests
 export type PreferencesRecordType = {
@@ -11,9 +13,8 @@ export type PreferencesRecordType = {
     clientPort: string;
     serverPort: string;
   };
-  theme: {
-    file: string;
-  };
+  keyBinds: KeyBinds;
+  theme: Theme;
   output: {
     defaultDirectory: string;
     midi: {
@@ -32,9 +33,8 @@ const PreferencesRecord = Record<PreferencesRecordType>({
     clientPort: '',
     serverPort: ''
   },
-  theme: {
-    file: ''
-  },
+  keyBinds: new KeyBinds(),
+  theme: new Theme(),
   output: {
     defaultDirectory: './',
     midi: {

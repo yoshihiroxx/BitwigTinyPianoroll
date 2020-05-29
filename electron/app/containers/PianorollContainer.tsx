@@ -8,6 +8,7 @@ import MidiClip from '../models/MidiClip';
 import { ModelType } from '../models/ModelCreator';
 
 function mapStateToProps(state: ModelType) {
+  console.log(state.preferences);
   return {
     cref: 'he',
     crefRoot: 4,
@@ -20,6 +21,8 @@ function mapStateToProps(state: ModelType) {
     },
     clip: state.editor.project.tracks.getIn([0, 0]),
     tool: state.editor.tool,
+    keyBinds: state.preferences.keyBinds,
+    theme: state.preferences.theme,
     zoom: {
       x: 1,
       y: 1

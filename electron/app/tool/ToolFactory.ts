@@ -9,9 +9,8 @@ import LengthTool from './LengthTool';
 import MidiNote from '../models/MidiNote';
 
 const keySettings = {
-  command: 'Eraser',
-  rightClick: null,
-  option: ''
+  ERASER: [87, 75],
+  PEN: []
 };
 
 export default class ToolManager {
