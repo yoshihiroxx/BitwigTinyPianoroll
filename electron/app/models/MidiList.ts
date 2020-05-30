@@ -34,6 +34,20 @@ export default class MidiList extends MidiListRecord {
     return found instanceof MidiNote;
   }
 
+  public slidePitch(noteNumber: number) {
+    const nextNotes = this.get('notes').map(note => {
+      return note.set('noteNumber', note.get('noteNumber') + noteNumber);
+    });
+    return this.set('notes', nextNotes);
+  }
+
+  public slideBeat(beat: number) {
+    const nextNotes = this.get('notes').map(note => {
+      return note.set('startBeat', note.get('startBeat') + beat);
+    });
+    return this.set('notes', nextNotes);
+  }
+
   public sortNoteToFirst(note: MidiNote) {
     const nextNotes = this.get('notes').sort(n => {
       if (n.equals(note)) {

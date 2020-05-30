@@ -15,11 +15,22 @@ export const HANDLE_MOUSE_EVENT = 'HANDLE_MOUSE_EVENT';
 export const ADD_NOTE = 'ADD_NOTE';
 export const REMOVE_NOTE = 'REMOVE_NOTE';
 export const CLEAR_SELECTIONS = 'CLEAR_SELECTIONS';
+export const SET_SELECTIONS = 'SET_SELECTIONS';
 
 export function clearSelections() {
   return {
     type: CLEAR_SELECTIONS,
     payload: {},
+    meta: {}
+  };
+}
+
+export function setSelections(selections: MidiList) {
+  return {
+    type: SET_SELECTIONS,
+    payload: {
+      selections
+    },
     meta: {}
   };
 }
@@ -160,7 +171,6 @@ export function onKeyEvent(event) {
       if (!keyBind) {
         throw new Error(`${actionName}: is not defined in KeyBinds`);
       }
-      console.log(keyBind);
       if (
         keyBind.codes.some((value: number) => {
           return value === event.keyCode;
@@ -177,12 +187,69 @@ export function onKeyEvent(event) {
 
     switch (matchedAction) {
       case 'pitchUp':
-        console.log('TODO:pitchUp');
+        {
+          const selections = tool.get('selections');
+          if (!tool.get('isDrawing')) {
+            selections.get('notes').forEach((note: MidiNote) => {
+              dispatch(removeNote(note));
+            });
+            selections.get('notes').forEach((note: MidiNote) => {
+              dispatch(
+                addNote(note.set('noteNumber', note.get('noteNumber') + 1))
+              );
+            });
+            dispatch(setSelections(selections.slidePitch(1)));
+          }
+        }
         break;
-      case 'pitchDown': {
-        console.log('TODO:pitchDown');
+      case 'pitchDown':
+        {
+          const selections = tool.get('selections');
+          if (!tool.get('isDrawing')) {
+            selections.get('notes').forEach((note: MidiNote) => {
+              dispatch(removeNote(note));
+            });
+            selections.get('notes').forEach((note: MidiNote) => {
+              dispatch(
+                addNote(note.set('noteNumber', note.get('noteNumber') - 1))
+              );
+            });
+            dispatch(setSelections(selections.slidePitch(-1)));
+          }
+        }
         break;
-      }
+      case 'increaseBeat':
+        {
+          const selections = tool.get('selections');
+          if (!tool.get('isDrawing')) {
+            selections.get('notes').forEach((note: MidiNote) => {
+              dispatch(removeNote(note));
+            });
+            selections.get('notes').forEach((note: MidiNote) => {
+              dispatch(
+                addNote(note.set('startBeat', note.get('startBeat') + 0.25))
+              );
+            });
+            dispatch(setSelections(selections.slideBeat(0.25)));
+          }
+        }
+        break;
+      case 'decreaseBeat':
+        {
+          const selections = tool.get('selections');
+          if (!tool.get('isDrawing')) {
+            selections.get('notes').forEach((note: MidiNote) => {
+              dispatch(removeNote(note));
+            });
+            selections.get('notes').forEach((note: MidiNote) => {
+              dispatch(
+                addNote(note.set('startBeat', note.get('startBeat') - 0.25))
+              );
+            });
+            dispatch(setSelections(selections.slideBeat(-0.25)));
+          }
+        }
+        break;
       case 'removeNotes': {
         const selections = tool.get('selections');
         if (!tool.get('isDrawing')) {

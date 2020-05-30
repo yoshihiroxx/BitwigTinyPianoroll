@@ -10,6 +10,7 @@ import {
 import {
   HANDLE_MOUSE_EVENT,
   HANDLE_TOOL,
+  SET_SELECTIONS,
   handleMouseEvent,
   handleTool,
   focusClip
@@ -80,6 +81,9 @@ export default function tool(state = new PenTool(), action: Actions) {
           throw new Error(`${action.meta.toolType}: This tool is not defined.`);
           return state;
       }
+    }
+    case SET_SELECTIONS: {
+      return state.set('selections', action.payload.selections);
     }
     default:
       return state;
