@@ -29,10 +29,9 @@ export default class MoveTool extends Tool {
     // selection copty to drawing
     if (!this.get('isDrawing')) return this;
     if (typeof beatOrNote === 'number' && typeof noteNumber === 'number') {
-      const clicked: MidiNote = this.getIn(['drawing', 'notes']).first();
+      const clicked: MidiNote = this.getIn(['selections', 'notes']).first();
       const offsetBeat = beatOrNote - this.getIn(['eventStart', 'beat']);
-      const offsetNoteNumber =
-        noteNumber - this.getIn(['eventStart', 'noteNumber']);
+      const offsetNoteNumber = noteNumber - clicked.get('noteNumber');
       const nextDrawingList = this.getIn(['selections', 'notes']).map(
         (n: MidiNote) => {
           return n
