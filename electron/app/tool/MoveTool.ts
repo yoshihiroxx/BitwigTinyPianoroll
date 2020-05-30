@@ -16,6 +16,12 @@ export default class MoveTool extends Tool {
       const drawing = selections;
       return nextState.set('selections', selections).set('drawing', drawing);
     }
+    if (typeof beatOrNote === 'number') {
+      return this.setIn(['eventStart', 'beat'], beatOrNote).setIn(
+        ['eventStart', 'noteNumber'],
+        noteNumber
+      );
+    }
     return this;
   }
 
@@ -24,9 +30,10 @@ export default class MoveTool extends Tool {
     if (!this.get('isDrawing')) return this;
     if (typeof beatOrNote === 'number' && typeof noteNumber === 'number') {
       const clicked: MidiNote = this.getIn(['drawing', 'notes']).first();
-      const offsetBeat = beatOrNote - clicked.get('startBeat');
-      const offsetNoteNumber = noteNumber - clicked.get('noteNumber');
-      const nextDrawingList = this.getIn(['drawing', 'notes']).map(
+      const offsetBeat = beatOrNote - this.getIn(['eventStart', 'beat']);
+      const offsetNoteNumber =
+        noteNumber - this.getIn(['eventStart', 'noteNumber']);
+      const nextDrawingList = this.getIn(['selections', 'notes']).map(
         (n: MidiNote) => {
           return n
             .set('startBeat', n.get('startBeat') + offsetBeat)

@@ -11,23 +11,16 @@ export const HANDLE_CLICK = 'HANDLE_CLICK';
 export const HANDLE_TOOL = 'HANDLE_TOOL';
 export const HANDLE_DRAG = 'HANDLE_DRAG';
 export const HANDLE_RELEASE = 'HANDLE_RELEASE';
-export const HANDLE_EVENT = 'HANDLE_EVENT';
 export const HANDLE_MOUSE_EVENT = 'HANDLE_MOUSE_EVENT';
 export const ADD_NOTE = 'ADD_NOTE';
 export const REMOVE_NOTE = 'REMOVE_NOTE';
+export const CLEAR_SELECTIONS = 'CLEAR_SELECTIONS';
 
-export function handleEvent(
-  event: string,
-  beatOrNote: number | MidiNote,
-  noteNumber: number
-) {
+export function clearSelections() {
   return {
-    type: HANDLE_EVENT,
-    event,
-    payload: {
-      beatOrNote,
-      noteNumber
-    }
+    type: CLEAR_SELECTIONS,
+    payload: {},
+    meta: {}
   };
 }
 
@@ -145,6 +138,70 @@ export function onMouseEvent(
         error: new Error(`${event} is not defined.`)
       };
   }
+}
+
+export function onKeyEvent(event) {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const { editor, preferences } = getState();
+    const tool = editor.get('tool');
+    const actionNames: Array<string> = [
+      'copy',
+      'paste',
+      'pitchUp',
+      'pitchDown',
+      'increaseBeat',
+      'decreaseBeat',
+      'removeNotes'
+    ];
+
+    let matchedAction = '';
+    actionNames.forEach((actionName: string) => {
+      const keyBind: KeyBind = preferences.keyBinds.get(actionName);
+      if (!keyBind) {
+        throw new Error(`${actionName}: is not defined in KeyBinds`);
+      }
+      console.log(keyBind);
+      if (
+        keyBind.codes.some((value: number) => {
+          return value === event.keyCode;
+        }) &&
+        keyBind.metaKey === event.metaKey &&
+        keyBind.altKey === event.altKey &&
+        keyBind.shiftKey === event.shiftKey
+      ) {
+        matchedAction = actionName;
+      }
+    });
+
+    console.log(matchedAction);
+
+    switch (matchedAction) {
+      case 'pitchUp':
+        console.log('TODO:pitchUp');
+        break;
+      case 'pitchDown': {
+        console.log('TODO:pitchDown');
+        break;
+      }
+      case 'removeNotes': {
+        const selections = tool.get('selections');
+        if (!tool.get('isDrawing')) {
+          selections.get('notes').forEach((note: MidiNote) => {
+            dispatch(removeNote(note));
+          });
+          dispatch(clearSelections());
+        }
+        break;
+      }
+      default:
+        return {
+          type: 'ERROR',
+          payload: {},
+          meta: {},
+          error: new Error(`${matchedAction} is not defined.`)
+        };
+    }
+  };
 }
 
 export function focusClip(trackId: number, clipId: number) {

@@ -3,6 +3,12 @@ import { List, Record } from 'immutable';
 import MidiList from '../models/MidiList';
 import MidiNote from '../models/MidiNote';
 
+//-------------------------------------------------------
+//
+// Do not modifiy the [[ notes:MidiList ]] in this class.
+//
+//-------------------------------------------------------
+
 export type ToolRecordType = {
   notes: MidiList;
   selections: MidiList;
@@ -19,6 +25,7 @@ export const ToolRecord = Record<ToolRecordType>({
   notes: new MidiList(),
   selections: new MidiList(),
   drawing: new MidiList(),
+  stashed: new MidiList(),
   noteLength: 1,
   isDrawing: false,
   eventStart: {
@@ -74,6 +81,10 @@ export default class Tool extends ToolRecord {
 
   public prepareToChange() {
     return this.set('isDrawing', false);
+  }
+
+  public clearSelection() {
+    return this.set('selections', new MidiList());
   }
 
   protected setIsDrawing(nextProp: boolean) {

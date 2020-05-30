@@ -39,7 +39,7 @@ window.addEventListener(
 
 ipcRenderer.send('test');
 ipcRenderer.on('test', (event, arg) => {
-  console.log('arg : ');
+  console.log('ipc connection test : ');
   console.log(arg);
 });
 

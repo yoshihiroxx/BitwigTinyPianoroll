@@ -6,11 +6,23 @@ type Props = {
   actions: {
     onChangeCref: (crefName: string) => void;
     onChangeOctave: (applyValue: number) => void;
+    onChangeScale: (scaleName: string) => void;
   };
 };
 
 export default function PianoRollToolBar(props: Props) {
   const { actions, items } = props;
+
+  const scaleList: Array<unknown> = [];
+  if (items.scales.length > 0) {
+    items.scales.forEach(scale => {
+      scaleList.push(
+        <option key={scale.name} value={scale.name}>
+          {scale.name}
+        </option>
+      );
+    });
+  }
 
   return (
     <div className={styles.pianoRollToolBar}>
@@ -21,7 +33,12 @@ export default function PianoRollToolBar(props: Props) {
           items={items.toggleCrefButtons}
         />
         <span>scale</span>
-        <button>cmaj</button>
+        <select
+          name="scale"
+          onChange={e => actions.onChangeScale(e.target.value)}
+        >
+          {scaleList}
+        </select>
         <span>octave</span>
         <button type="button" onClick={() => actions.onChangeOctave(-1)}>
           -

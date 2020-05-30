@@ -43,7 +43,6 @@ export default function tool(state = new PenTool(), action: Actions) {
             action.payload.noteNumber
           );
         case 'release': {
-          // console.log(JSON.stringify(state, null, 2));
           const nextState = state.onRelease(
             action.payload.beatOrNote,
             action.payload.noteNumber
@@ -60,7 +59,6 @@ export default function tool(state = new PenTool(), action: Actions) {
       //   nextState = nextState.set('isDrawing', false);
       //   nextState = nextState.set('drawing', new MidiList());
       // }
-      console.log(action.meta.toolType);
       if (state.get('isDrawing')) return state;
       switch (action.meta.toolType) {
         case 'pen':

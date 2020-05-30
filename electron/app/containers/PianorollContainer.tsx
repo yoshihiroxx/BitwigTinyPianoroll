@@ -3,15 +3,12 @@ import { connect } from 'react-redux';
 import Pianoroll, {
   PianorollStateType
 } from '../components/organisms/PianoRoll';
-import { handleEvent, handleTool, onMouseEvent } from '../actions/tool';
+import { handleTool, onMouseEvent, onKeyEvent } from '../actions/tool';
 import MidiClip from '../models/MidiClip';
 import { ModelType } from '../models/ModelCreator';
 
 function mapStateToProps(state: ModelType) {
-  console.log(state.preferences);
   return {
-    cref: 'he',
-    crefRoot: 4,
     scale: {
       centre: 'c',
       defree: {
@@ -38,7 +35,8 @@ function mapDispatchToProps(dispatch: Dispatch) {
   return bindActionCreators(
     {
       handleTool,
-      onMouseEvent
+      onMouseEvent,
+      onKeyEvent
     },
     dispatch
   );

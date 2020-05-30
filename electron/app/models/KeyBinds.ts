@@ -1,14 +1,80 @@
 import { Record, List } from 'immutable';
-import keyCode from '../keycode';
+import keyCodes from '../keycode';
 
 type KeyBindsType = {
-  eraser: List<number>;
-  rect: List<number>;
+  eraser: KeyBind;
+  rect: KeyBind;
+  copy: KeyBind;
+  paste: KeyBind;
+  pitchUp: KeyBind;
+  pitchDown: KeyBind;
+  increaseBeat: KeyBind;
+  decreaseBeat: KeyBind;
+  removeNotes: KeyBind;
+};
+
+type KeyBind = {
+  metaKey: boolean;
+  altKey: boolean;
+  shiftKey: boolean;
+  codes: Array<number>;
 };
 
 const KeyBindsRecord = Record<KeyBindsType>({
-  eraser: List([keyCode.option]),
-  rect: List([keyCode.cmd_left, keyCode.cmd_right])
+  eraser: {
+    metaKey: false,
+    altKey: true,
+    shiftKey: false,
+    codes: [keyCodes.option]
+  },
+  rect: {
+    metaKey: true,
+    altKey: false,
+    shiftKey: false,
+    codes: [keyCodes.cmd_left, keyCodes.cmd_right]
+  },
+  copy: {
+    metaKey: true,
+    altKey: false,
+    shiftKey: false,
+    codes: [keyCodes.c]
+  },
+  paste: {
+    metaKey: true,
+    altKey: false,
+    shiftKey: false,
+    codes: [keyCodes.p]
+  },
+  pitchUp: {
+    metaKey: false,
+    altKey: false,
+    shiftKey: false,
+    codes: [keyCodes.up]
+  },
+  pitchDown: {
+    metaKey: false,
+    altKey: false,
+    shiftKey: false,
+    codes: [keyCodes.down]
+  },
+  increaseBeat: {
+    metaKey: false,
+    altKey: false,
+    shiftKey: false,
+    codes: [keyCodes.right]
+  },
+  decreaseBeat: {
+    metaKey: false,
+    altKey: false,
+    shiftKey: false,
+    codes: [keyCodes.left]
+  },
+  removeNotes: {
+    metaKey: false,
+    altKey: false,
+    shiftKey: false,
+    codes: [keyCodes.delete]
+  }
 });
 
 export default class KeyBinds extends KeyBindsRecord {}

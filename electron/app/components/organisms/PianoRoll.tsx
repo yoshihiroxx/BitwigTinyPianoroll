@@ -8,7 +8,7 @@ import NoteLabelBar from '../molecules/NoteLabelBar';
 import PianorollToolBar from '../molecules/PianoRollToolBar';
 import MidiList from '../../models/MidiList';
 import styles from './PianoRoll.css';
-import Config from '../../config';
+import Scales, { ScaleType } from '../../data/scales';
 import {
   Tool,
   PenTool,
@@ -19,15 +19,12 @@ import {
 } from '../../tool/Tools';
 import MidiNote from '../../models/MidiNote';
 import Theme from '../../models/Theme';
-import KeyBinds from '../../models/Theme';
+import KeyBinds, { KeyBind } from '../../models/KeyBinds';
 
 export type PianorollStateType = {
-  onClick: () => void;
-  onRelease: () => void;
   handleTool: (toolType: string) => void;
-  onMouseEvent: () => void;
-  cref: string;
-  crefRoot: number;
+  onKeyEvent: () => void;
+  onMouseEvent: (type: string, beatOrNote: unknown, noteNumber: number) => void;
   scale: {
     centre: number;
     degree: {
@@ -80,12 +77,15 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     textObjects: Array<pixi.Text>;
   };
 
+  copied: MidiList;
+
   constructor(props: PianorollStateType) {
     super(props);
     this.isTreble = true;
     this.state = {
       octave: 9,
-      magnet: true
+      magnet: true,
+      scales: Scales
     };
     this.scale = {
       gridIndices: [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6],
@@ -103,10 +103,8 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
         'A',
         'A#',
         'B'
-      ],
-      textObjects: []
+      ]
     };
-    this.setupTextGraphics();
 
     this.domSize = {
       x: 1,
@@ -242,29 +240,46 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     this.isTreble = cref === 'treble';
   }
 
+  onChangeScale(scaleName: string) {
+    const { scales } = this.state;
+    const scale = scales.find((s: ScaleType) => s.name === scaleName);
+    this.scale.keyNames = scale.keyNames;
+    this.scale.signatures = scale.signatures;
+    this.resize();
+  }
+
   onKeyDown(e) {
+    if (e.repeat) return;
+    const { handleTool, onKeyEvent, keyBinds } = this.props;
     const toolNames = ['eraser', 'rect'];
-    toolNames.forEach(toolName => {
+    console.log(e);
+
+    // handle tools
+    toolNames.forEach((toolName: string) => {
+      const keyBind = keyBinds.get(toolName);
       if (
-        Config.getIn(['keyBinds', toolName]).find((n: number) => {
-          return n === e.keyCode;
+        keyBind.codes.some((value: number) => {
+          return value === e.keyCode;
         })
       ) {
-        const { handleTool } = this.props;
         handleTool(toolName);
       }
     });
+
+    onKeyEvent(e);
   }
 
   onKeyUp(e) {
-    const toolNames = ['eraser', 'rect'];
-    toolNames.forEach(toolName => {
+    const { handleTool, keyBinds } = this.props;
+    const toolNames: Array<string> = ['eraser', 'rect'];
+    // handle tools
+    toolNames.forEach((toolName: string) => {
+      const keyBind = keyBinds.get(toolName);
       if (
-        Config.getIn(['keyBinds', toolName]).find((n: number) => {
-          return n === e.keyCode;
+        keyBind.codes.some((value: number) => {
+          return value === e.keyCode;
         })
       ) {
-        const { handleTool } = this.props;
         handleTool('pen');
       }
     });
@@ -286,25 +301,6 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     } else {
       throw new Error(`${tool}: this tool functions has not implemented yet.`);
     }
-  }
-
-  private setupTextGraphics() {
-    const style = new pixi.TextStyle({
-      fontFamily: 'Arial',
-      fontSize: 11,
-      fontWeight: 'normal',
-      fill: ['#000000'] // gradient
-      //   // stroke: '#332244',
-      //   // strokeThickness: 5
-    });
-    this.scale.keyNames.forEach((keyName: string, id: number) => {
-      if (!this.scale.textObjects[id]) {
-        this.scale.textObjects.push(new pixi.Text(keyName, style));
-      } else {
-        this.scale.textObjects[id].destroy();
-        this.scale.textObjects[id] = new pixi.Text(keyName, style);
-      }
-    });
   }
 
   resize() {
@@ -537,20 +533,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
         rect.endFill();
       }
 
-      const keyNames = [
-        'C',
-        'C#',
-        'D',
-        'D#',
-        'E',
-        'F',
-        'F#',
-        'G',
-        'G#',
-        'A',
-        'A#',
-        'B'
-      ];
+      const { keyNames } = this.scale;
       const keyName = keyNames[noteNumber % 12] + Math.floor(noteNumber / 12);
 
       const style = new pixi.TextStyle({
@@ -636,7 +619,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
       type = 'canvas';
     }
     const { theme } = this.props;
-    const { octave } = this.state;
+    const { octave, scales } = this.state;
     return (
       <div className={styles.pianoRollContainer}>
         {pixi.utils.sayHello(type)}
@@ -654,13 +637,15 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
         <PianorollToolBar
           actions={{
             onChangeCref: this.onChangeCref.bind(this),
-            onChangeOctave: this.onChangeOctave.bind(this)
+            onChangeOctave: this.onChangeOctave.bind(this),
+            onChangeScale: this.onChangeScale.bind(this)
           }}
           items={{
             toggleCrefButtons: [
               { label: 'treble', isActive: this.isTreble },
               { label: 'bass', isActive: !this.isTreble }
-            ]
+            ],
+            scales
           }}
         />
       </div>

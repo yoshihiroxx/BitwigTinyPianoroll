@@ -8,6 +8,7 @@ import {
   HANDLE_EVENT,
   ADD_NOTE,
   REMOVE_NOTE,
+  CLEAR_SELECTIONS,
   handleEvent,
   handleTool
 } from '../actions/tool';
@@ -38,22 +39,23 @@ function editReducer(state: Editor, action: Actions) {
     }
 
     case ADD_NOTE: {
-      console.log(action.payload.note);
       let nextNotes = state.getIn(['tool', 'notes', 'notes']);
       nextNotes = nextNotes.push(action.payload.note);
       return state.setIn(['tool', 'notes', 'notes'], nextNotes);
     }
 
     case REMOVE_NOTE: {
-      console.log(action.payload.note);
       let nextNotes = state.getIn(['tool', 'notes', 'notes']);
       nextNotes = nextNotes.filterNot((note: MidiNote) => {
-        console.log(note.equals(action.payload.note));
         return note.equals(action.payload.note);
       });
-      console.log(JSON.stringify(nextNotes, null, 2));
       return state.setIn(['tool', 'notes', 'notes'], nextNotes);
     }
+
+    case CLEAR_SELECTIONS: {
+      return state.setIn(['tool', 'selections'], new MidiList());
+    }
+
     default:
       return state;
   }
