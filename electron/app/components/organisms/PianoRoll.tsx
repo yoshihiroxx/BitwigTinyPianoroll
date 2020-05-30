@@ -162,10 +162,9 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
       if (tool instanceof RectTool && tool.get('isDrawing')) {
         this.renderSelectionArea(mousePos.x, mousePos.y);
       } else {
-        this.layers.effects.removeChildren(
-          0,
-          this.layers.effects.children.length
-        );
+        this.layers.effects.removeChildren().forEach(child => {
+          child.destroy();
+        });
       }
     });
     this.layers.grid.on('pointerdown', event => {
@@ -358,7 +357,9 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
   }
 
   renderNotes() {
-    this.layers.notes.removeChildren(0, this.layers.notes.children.length);
+    this.layers.notes.removeChildren().forEach(child => {
+      child.destroy();
+    });
     this.layers.texts.removeChildren().forEach(child => {
       child.destroy();
     });
@@ -386,9 +387,11 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
   }
 
   renderGridLines() {
+    this.layers.grid.removeChildren().forEach(child => {
+      child.destroy();
+    });
     const { theme } = this.props;
     const lineColors = theme.pianoroll.lines;
-    this.layers.grid.removeChildren(0, this.layers.grid.children.length);
     // draw vertical grid line
     const width = this.domSize.x / (4 * 8);
     if (width > 25) {
@@ -439,7 +442,6 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
   }
 
   renderMidiNotes() {
-    this.layers.notes.removeChildren(0, this.layers.notes.children.length);
     const { tool } = this.props;
     if (tool instanceof Tool) {
       const notes = tool.getIn(['notes', 'notes']);
@@ -478,6 +480,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     notes.forEach((note: MidiNote) => {
       // const rect = new pixi.Rectangle(0, 0, 100, 20);
       const { octave } = this.state;
+
       const rect = new pixi.Graphics();
       const noteNumber = note.get('noteNumber');
       // set the line style to have a width of 5 and set the color to red
