@@ -15,6 +15,7 @@ export type ToolRecordType = {
   drawing: MidiList;
   noteLength: number;
   isDrawing: boolean;
+  shouldKeepSelection: boolean;
   eventStart: {
     beat: number;
     noteNumber: number;
@@ -25,9 +26,9 @@ export const ToolRecord = Record<ToolRecordType>({
   notes: new MidiList(),
   selections: new MidiList(),
   drawing: new MidiList(),
-  stashed: new MidiList(),
   noteLength: 1,
   isDrawing: false,
+  shouldKeepSelection: false,
   eventStart: {
     beat: 0,
     noteNumber: 0
@@ -80,7 +81,7 @@ export default class Tool extends ToolRecord {
   }
 
   public prepareToChange() {
-    return this.set('isDrawing', false);
+    return this.set('isDrawing', false).set('shouldKeepSelection', false);
   }
 
   public clearSelection() {

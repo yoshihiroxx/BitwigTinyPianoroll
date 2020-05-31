@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import Pianoroll, {
   PianorollStateType
 } from '../components/organisms/PianoRoll';
-import { handleTool, onMouseEvent, onKeyEvent } from '../actions/tool';
+import { handleTool, onMouseEvent } from '../actions/tool';
+import { onKeyDown, onKeyUp } from '../actions/keyEvents';
 import MidiClip from '../models/MidiClip';
 import { ModelType } from '../models/ModelCreator';
 
@@ -36,7 +37,8 @@ function mapDispatchToProps(dispatch: Dispatch) {
     {
       handleTool,
       onMouseEvent,
-      onKeyEvent
+      onKeyDown,
+      onKeyUp
     },
     dispatch
   );

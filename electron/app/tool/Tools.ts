@@ -5,7 +5,6 @@ import MoveTool from './MoveTool';
 import RectTool from './RectTool';
 import StretchTool from './StretchTool';
 import LengthTool from './LengthTool';
-import SmartTool from './SmartTool';
 
 export default {
   Tool,
@@ -14,8 +13,7 @@ export default {
   MoveTool,
   RectTool,
   StretchTool,
-  LengthTool,
-  SmartTool
+  LengthTool
 };
 
 export {
@@ -25,6 +23,5 @@ export {
   MoveTool,
   RectTool,
   StretchTool,
-  LengthTool,
-  SmartTool
+  LengthTool
 };

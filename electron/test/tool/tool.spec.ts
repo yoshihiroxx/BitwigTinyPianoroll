@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import MidiParser from 'midi-parser-js';
-import Tool from '../../app/tool/Tool';
+import Tool, { ToolRecord } from '../../app/tool/Tool';
 import PenTool from '../../app/tool/PenTool';
 import EraserTool from '../../app/tool/EraserTool';
 import MoveTool from '../../app/tool/MoveTool';
@@ -32,15 +32,20 @@ describe('Tool', () => {
   });
 
   test('Tool Can be loaded', () => {
-    const t = new Tool();
     const mt = new MoveTool();
     const rt = new RectTool();
-    expect(t instanceof Tool).toBeTruthy();
     expect(pt instanceof Tool).toBeTruthy();
     expect(et instanceof Tool).toBeTruthy();
     expect(mt instanceof Tool).toBeTruthy();
     expect(rt instanceof Tool).toBeTruthy();
     expect(pt instanceof EraserTool).toBeFalsy();
+  });
+
+  test('handleTool', () => {
+    console.log(et.get('notes'));
+    expect(et instanceof Tool).toBeTruthy();
+    expect(et instanceof EraserTool).toBeTruthy();
+    expect(et instanceof PenTool).toBeFalsy();
   });
 
   test('PenTool Behavior', () => {

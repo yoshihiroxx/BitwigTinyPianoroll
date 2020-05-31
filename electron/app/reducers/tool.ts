@@ -13,7 +13,8 @@ import {
   SET_SELECTIONS,
   handleMouseEvent,
   handleTool,
-  focusClip
+  focusClip,
+  SET_KEEP_SELECTIONS
 } from '../actions/tool';
 import MidiNote from '../models/MidiNote';
 import MidiList from '../models/MidiList';
@@ -85,6 +86,11 @@ export default function tool(state = new PenTool(), action: Actions) {
     case SET_SELECTIONS: {
       return state.set('selections', action.payload.selections);
     }
+
+    case SET_KEEP_SELECTIONS: {
+      return state.set('shouldKeepSelection', action.payload.value);
+    }
+
     default:
       return state;
   }

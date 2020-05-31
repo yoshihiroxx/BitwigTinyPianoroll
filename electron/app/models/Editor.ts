@@ -5,7 +5,7 @@ import PenTool from '../tool/PenTool';
 
 export type EditorRecordType = {
   project: ProjectRecordType;
-  tool: ToolRecordType;
+  tool: Tool;
 };
 
 const defaultState: EditorRecordType = {

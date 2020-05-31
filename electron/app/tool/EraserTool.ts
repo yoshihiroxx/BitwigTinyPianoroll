@@ -21,12 +21,9 @@ export default class EraserTool extends Tool {
 
     if (beatOrNote instanceof MidiNote) {
       const mn = beatOrNote;
-      const found = this.getIn(['notes', 'notes']).find((note: MidiNote) => {
-        return note.equals(mn);
-      });
-      if (!this.hasInSelections(found)) {
+      if (!this.hasInSelections(mn)) {
         let notes = this.getIn(['selections', 'notes']);
-        notes = notes.push(found);
+        notes = notes.push(mn);
         return this.setIn(['selections', 'notes'], notes);
       }
     } else if (typeof beatOrNote === 'number' && typeof noteNum === 'number') {
@@ -38,10 +35,6 @@ export default class EraserTool extends Tool {
   public onRelease(beat: number, noteNum: number) {
     const nextState = this.setIsDrawing(false);
     return nextState;
-  }
-
-  private setIsDrawing(nextProp: boolean) {
-    return this.set('isDrawing', nextProp);
   }
 
   private hasInSelections(mn: MidiNote): boolean {

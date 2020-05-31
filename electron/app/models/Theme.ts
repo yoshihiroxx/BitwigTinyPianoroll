@@ -10,6 +10,7 @@ export type ThemeType = {
   pianoroll: {
     background: color;
     notes: {
+      text: color;
       common: color;
       selection: color;
       drawing: color;
@@ -35,16 +36,20 @@ const ThemeRecord = Record<ThemeType>({
       alpha: 1
     },
     notes: {
+      text: {
+        value: 0x000000,
+        alpha: 0.4
+      },
       common: {
-        value: 0x33bb33,
+        value: 0x33bb99,
         alpha: 1
       },
       selection: {
-        value: 0x3333bb,
+        value: 0x33ddff,
         alpha: 1
       },
       drawing: {
-        value: 0xbb3333,
+        value: 0xbbff33,
         alpha: 1
       }
     },

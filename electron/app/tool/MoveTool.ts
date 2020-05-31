@@ -1,4 +1,4 @@
-import { List } from 'immutable';
+import { Record, List } from 'immutable';
 import MidiNote from '../models/MidiNote';
 import MidiList from '../models/MidiList';
 import Tool from './Tool';

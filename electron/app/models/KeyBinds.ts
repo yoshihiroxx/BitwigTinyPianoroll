@@ -11,9 +11,10 @@ type KeyBindsType = {
   increaseBeat: KeyBind;
   decreaseBeat: KeyBind;
   removeNotes: KeyBind;
+  keepSelectionNotes: KeyBind;
 };
 
-type KeyBind = {
+export type KeyBind = {
   metaKey: boolean;
   altKey: boolean;
   shiftKey: boolean;
@@ -74,6 +75,12 @@ const KeyBindsRecord = Record<KeyBindsType>({
     altKey: false,
     shiftKey: false,
     codes: [keyCodes.delete]
+  },
+  keepSelectionNotes: {
+    metaKey: false,
+    altKey: true,
+    shiftKey: false,
+    codes: [keyCodes.option]
   }
 });
 
