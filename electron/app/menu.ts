@@ -4,7 +4,8 @@ import {
   Menu,
   shell,
   BrowserWindow,
-  MenuItemConstructorOptions
+  MenuItemConstructorOptions,
+  remote
 } from 'electron';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
@@ -15,8 +16,11 @@ interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
 
-  constructor(mainWindow: BrowserWindow) {
+  popPrefWindow: () => void;
+
+  constructor(mainWindow: BrowserWindow, popPrefWindow: () => void) {
     this.mainWindow = mainWindow;
+    this.popPrefWindow = popPrefWindow;
   }
 
   buildMenu() {
@@ -77,6 +81,15 @@ export default class MenuBuilder {
         { label: 'Show All', selector: 'unhideAllApplications:' },
         { type: 'separator' },
         {
+          label: 'Preferences',
+          accelerator: 'Command+,',
+          click: () => {
+            console.log('open pref');
+            this.popPrefWindow();
+          }
+        },
+        { type: 'separator' },
+        {
           label: 'Quit',
           accelerator: 'Command+Q',
           click: () => {
@@ -98,6 +111,13 @@ export default class MenuBuilder {
           label: 'Select All',
           accelerator: 'Command+A',
           selector: 'selectAll:'
+        },
+        { type: 'separator' },
+        {
+          label: 'Open Midi File (Maschine)',
+          click: () => {
+            console.log('open');
+          }
         }
       ]
     };

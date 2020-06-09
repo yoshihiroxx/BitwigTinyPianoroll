@@ -119,6 +119,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
       antialias: true,
       resolution: 2
     });
+
     this.layers = {
       selectionItems: new pixi.Container(),
       effects: new pixi.Container(),
@@ -208,6 +209,8 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     this.canvas.stage.addChild(this.layers.selectionItems);
     this.canvas.stage.addChild(this.layers.notes);
     this.canvas.stage.addChild(this.layers.texts);
+    this.layers.texts.interactiveChildren = false;
+    this.layers.effects.interactiveChildren = false;
     this.canvas.stage.addChild(this.layers.effects);
     this.layers.grid.cursor = "url('./images/icons/pen.svg'),auto";
   }

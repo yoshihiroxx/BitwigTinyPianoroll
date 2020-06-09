@@ -23,6 +23,8 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+let editWindow: BrowserWindow | null = null;
+let prefWindow: BrowserWindow | null = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -44,6 +46,40 @@ const installExtensions = async () => {
   return Promise.all(
     extensions.map(name => installer.default(installer[name], forceDownload))
   ).catch(console.log);
+};
+
+const popPrefWindow = () => {
+  if (!prefWindow) {
+    prefWindow = new BrowserWindow({
+      show: false,
+      width: 1024,
+      height: 768,
+      webPreferences:
+        process.env.NODE_ENV === 'development' ||
+        process.env.E2E_BUILD === 'true'
+          ? {
+              nodeIntegration: true,
+              nodeIntegrationInWorker: true
+            }
+          : {
+              preload: path.join(__dirname, 'dist/renderer.prod.js')
+            }
+    });
+    prefWindow.loadURL(`file://${__dirname}/app.html`);
+    prefWindow.webContents.on('did-finish-load', () => {
+      if (!prefWindow) {
+        throw new Error('"prefWindow" is not defined');
+      } else {
+        prefWindow.show();
+        prefWindow.focus();
+      }
+    });
+    prefWindow.on('closed', () => {
+      prefWindow = null;
+    });
+  } else {
+    prefWindow.show();
+  }
 };
 
 const createWindow = async () => {
@@ -69,7 +105,25 @@ const createWindow = async () => {
           }
   });
 
+  editWindow = new BrowserWindow({
+    show: false,
+    width: 1920,
+    height: 330,
+    backgroundColor: '#2e2c29',
+    frame: false,
+    webPreferences:
+      process.env.NODE_ENV === 'development' || process.env.E2E_BUILD === 'true'
+        ? {
+            nodeIntegration: true,
+            nodeIntegrationInWorker: true
+          }
+        : {
+            preload: path.join(__dirname, 'dist/renderer.prod.js')
+          }
+  });
+
   mainWindow.loadURL(`file://${__dirname}/app.html`);
+  editWindow.loadURL(`file://${__dirname}/app.html`);
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -82,6 +136,7 @@ const createWindow = async () => {
     } else {
       mainWindow.show();
       mainWindow.focus();
+      editWindow?.show();
     }
   });
 
@@ -89,7 +144,7 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
+  const menuBuilder = new MenuBuilder(mainWindow, popPrefWindow);
   menuBuilder.buildMenu();
 
   // Remove this if your app does not use auto updates

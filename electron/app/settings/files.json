@@ -1,0 +1,6 @@
+{
+  "files":{
+    "settings":"./defaultSettings.json",
+    "theme": "./defaultTheme.json"
+  }
+}

@@ -1,6 +1,6 @@
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import Preferences from '../components/templates/Preferences';
+import PreferencesComponent from '../components/templates/Preferences';
 import {
   increment,
   decrement,
@@ -8,10 +8,11 @@ import {
   incrementAsync
 } from '../actions/counter';
 import { counterStateType } from '../reducers/types';
+import { ModelType } from '../models/ModelCreator';
 
-function mapStateToProps(state: counterStateType) {
+function mapStateToProps(state: ModelType) {
   return {
-    counter: state.counter
+    preferences: state.preferences
   };
 }
 
@@ -27,4 +28,7 @@ function mapDispatchToProps(dispatch: Dispatch) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Preferences);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PreferencesComponent);

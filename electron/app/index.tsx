@@ -8,11 +8,11 @@ import './app.global.css';
 import { loadMidiFile } from './actions/debug';
 import Model from './models/ModelCreator';
 import Project from './models/Project';
-import initMainMenu from './menu/MainMenu';
+// import initMainMenu from './menu/MainMenu';
 
 const store = configureStore();
 
-initMainMenu(store);
+// initMainMenu(store);
 
 const menu = new remote.Menu();
 menu.append(
@@ -45,11 +45,11 @@ ipcRenderer.on('test', (event, arg) => {
 
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
-document.addEventListener('DOMContentLoaded', () =>
+document.addEventListener('DOMContentLoaded', () => {
   render(
     <AppContainer>
       <Root store={store} history={history} />
     </AppContainer>,
     document.getElementById('root')
-  )
-);
+  );
+});
