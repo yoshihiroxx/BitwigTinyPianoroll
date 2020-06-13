@@ -40,7 +40,6 @@ function initMainMenu(store) {
                 ]
               })
               .then(result => {
-                console.log(result.filePaths);
                 store.dispatch(loadMidiFile(result.filePaths[0]));
                 return result.filePaths;
               })

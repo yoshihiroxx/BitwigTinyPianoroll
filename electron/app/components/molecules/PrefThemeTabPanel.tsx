@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { ReactComponentElement, ReactElement } from 'react';
 import { TextField, Typography, Paper, Grid } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-
+import { ipcRenderer, remote } from 'electron';
+import { fromJS, List } from 'immutable';
 import PrefTabPanel, { PrefPaper } from '../atoms/PrefTabPanel';
 import Theme from '../../models/Theme';
 import PrefButton from '../atoms/PrefButton';
 import HexColorField from '../atoms/HexColorField';
+import AlphaColorField from '../atoms/AlphaField';
+import styles from './PrefThemeTabPanel.css';
+import UIConfig from '../../settings/prefrencesUIConfig.json';
 
 type Props = {
   state: Theme;
@@ -13,8 +17,9 @@ type Props = {
   currentIndex: number;
 };
 
-const updateTheme = function() {
+const updateTheme = (theme: Theme) => {
   // @todo Apply edited theme to application state.
+  ipcRenderer.send('update-theme', theme.toObject());
 };
 
 export default function PrefThemeTabPanel(props: Props) {
@@ -22,134 +27,112 @@ export default function PrefThemeTabPanel(props: Props) {
 
   const [editing, setEditing] = React.useState(state);
 
+  const uiConfig = UIConfig.tabs.theme.pianoroll;
+  const sections: Array<React.Component> = [];
+
+  const renderColorInputs = (inputs: Array<InputData>) => {
+    const list: Array<ReactElement> = [];
+    inputs.forEach((inputData: InputData) => {
+      list.push(
+        <div key={`input-${inputData.title}`}>
+          <Typography variant="subtitle1">{inputData.title}</Typography>
+          <span>{inputData.description}</span>
+          <Grid container spacing={2} className={styles.inputGroup}>
+            <Grid item xs={8}>
+              <HexColorField
+                id="outlined-basic"
+                label="value"
+                className={styles.input}
+                defaultValue={(() => {
+                  let itrValue: unknown = state;
+                  inputData.keys.forEach((key: string) => {
+                    if (!itrValue[key]) {
+                      throw new Error(
+                        `${key}: does not found the key in value`
+                      );
+                    }
+                    itrValue = itrValue[key];
+                  });
+                  return itrValue.value.toString(16).toUpperCase();
+                })()}
+                onValidated={value => {
+                  let keysToValue = List(inputData.keys);
+                  keysToValue = keysToValue.push('value');
+                  setEditing(editing.setIn(keysToValue.toArray(), value));
+                }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <AlphaColorField
+                id="outlined-basic"
+                label="alpha"
+                variant="outlined"
+                className={styles.input}
+                defaultValue={(() => {
+                  let itrValue: unknown = state;
+                  inputData.keys.forEach((key: string) => {
+                    if (!itrValue[key]) {
+                      throw new Error(
+                        `${key}: does not found the key in value`
+                      );
+                    }
+                    itrValue = itrValue[key];
+                  });
+                  return itrValue.alpha.toString();
+                })()}
+                onValidated={value => {
+                  let keysToAlpha = List(inputData.keys);
+                  keysToAlpha = keysToAlpha.push('alpha');
+                  setEditing(editing.setIn(keysToAlpha.toArray(), value));
+                }}
+              />
+            </Grid>
+          </Grid>
+        </div>
+      );
+    });
+    return list;
+  };
+
+  Object.keys(uiConfig).forEach((key, id) => {
+    if (!uiConfig[key].title || !uiConfig[key].inputs) return;
+    const section = (() => {
+      return (
+        <div className={styles.settingBlock} key={id}>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Typography>{uiConfig[key].title}</Typography>
+            </Grid>
+            <Grid item xs={8}>
+              {renderColorInputs(uiConfig[key].inputs)}
+            </Grid>
+          </Grid>
+        </div>
+      );
+    })();
+    sections.push(section);
+  });
+
+  type InputData = {
+    title: string;
+    description: string;
+    type: string;
+    keys: Array<string>;
+  };
+
   return (
     <PrefTabPanel value={currentIndex} index={index}>
-      <PrefPaper>
-        <Typography>Pianoroll</Typography>
-
-        <Typography>General</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <HexColorField
-              id="outlined-basic"
-              label="background"
-              variant="outlined"
-              defaultValue={state.pianoroll.background.value
-                .toString(16)
-                .toUpperCase()}
-              onValidated={value => {
-                setEditing(
-                  editing.setIn(['pianoroll', 'background', 'value'], value)
-                );
-              }}
-            />
-          </Grid>
-        </Grid>
-        <Typography>Notes</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <HexColorField
-              id="outlined-basic"
-              label="text"
-              variant="outlined"
-              defaultValue={state.pianoroll.notes.text.value
-                .toString(16)
-                .toUpperCase()}
-              onValidated={value => {
-                setEditing(
-                  editing.setIn(['pianoroll', 'notes', 'text', 'value'], value)
-                );
-              }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="outlined-basic"
-              label="common"
-              variant="outlined"
-              defaultValue={state.pianoroll.notes.common.value
-                .toString(16)
-                .toUpperCase()}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="outlined-basic"
-              label="selection"
-              variant="outlined"
-              defaultValue={state.pianoroll.notes.selection.value
-                .toString(16)
-                .toUpperCase()}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="outlined-basic"
-              label="drawing"
-              variant="outlined"
-              defaultValue={state.pianoroll.notes.drawing.value
-                .toString(16)
-                .toUpperCase()}
-            />
-          </Grid>
-        </Grid>
-        <Typography>Lines</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              id="outlined-basic"
-              label="horizontal-main"
-              variant="outlined"
-              defaultValue={state.pianoroll.lines.horizontal.main.value
-                .toString(16)
-                .toUpperCase()}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="outlined-basic"
-              label="horizontal-sub"
-              variant="outlined"
-              defaultValue={state.pianoroll.lines.horizontal.sub.value
-                .toString(16)
-                .toUpperCase()}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="outlined-basic"
-              label="vertical-quarter"
-              variant="outlined"
-              defaultValue={state.pianoroll.lines.vertical.quarter.value
-                .toString(16)
-                .toUpperCase()}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="outlined-basic"
-              label="vertical-beat"
-              variant="outlined"
-              defaultValue={state.pianoroll.lines.vertical.beat.value
-                .toString(16)
-                .toUpperCase()}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              id="outlined-basic"
-              label="vertical-bar"
-              variant="outlined"
-              defaultValue={state.pianoroll.lines.vertical.bar.value
-                .toString(16)
-                .toUpperCase()}
-            />
-          </Grid>
-        </Grid>
-        <PrefButton variant="contained" color="primary" onClick={updateTheme}>
-          Save
-        </PrefButton>
-      </PrefPaper>
+      <Typography variant="h5">Pianoroll</Typography>
+      {sections}
+      <PrefButton
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          updateTheme(editing);
+        }}
+      >
+        Save
+      </PrefButton>
     </PrefTabPanel>
   );
 }

@@ -6,7 +6,7 @@ type Props = {
   onValidated: (value: number) => void;
 };
 
-export default function HexColorField(props: Props & TextFieldProps) {
+export default function AlphaColorField(props: Props & TextFieldProps) {
   const { onValidated, ...other } = props;
 
   const [isError, setError] = React.useState(false);
@@ -20,20 +20,14 @@ export default function HexColorField(props: Props & TextFieldProps) {
       size="small"
       fullWidth
       onChange={e => {
-        if (e.target.value.length !== 6) {
+        const value = Number(e.target.value);
+        if (value < 0 || value > 1) {
           setError(true);
-          setHelperText('Invalid value');
-          return;
-        }
-        const re = /[0-9A-Fa-f]{6}/;
-        if (!re.test(e.target.value)) {
-          setError(true);
-          setHelperText('Invalid value');
-          return;
+          setHelperText('The value range is 0~1.');
         }
         setError(false);
         setHelperText('');
-        onValidated(parseInt(e.target.value, 16));
+        onValidated(value);
       }}
       {...other}
     />

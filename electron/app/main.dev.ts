@@ -13,6 +13,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import WindowManager from './managers/WindowManager';
 
 export default class AppUpdater {
   constructor() {
@@ -21,10 +22,6 @@ export default class AppUpdater {
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
-
-let mainWindow: BrowserWindow | null = null;
-let editWindow: BrowserWindow | null = null;
-let prefWindow: BrowserWindow | null = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -48,38 +45,10 @@ const installExtensions = async () => {
   ).catch(console.log);
 };
 
+const windowManager = new WindowManager();
+
 const popPrefWindow = () => {
-  if (!prefWindow) {
-    prefWindow = new BrowserWindow({
-      show: false,
-      width: 1024,
-      height: 768,
-      webPreferences:
-        process.env.NODE_ENV === 'development' ||
-        process.env.E2E_BUILD === 'true'
-          ? {
-              nodeIntegration: true,
-              nodeIntegrationInWorker: true
-            }
-          : {
-              preload: path.join(__dirname, 'dist/renderer.prod.js')
-            }
-    });
-    prefWindow.loadURL(`file://${__dirname}/app.html`);
-    prefWindow.webContents.on('did-finish-load', () => {
-      if (!prefWindow) {
-        throw new Error('"prefWindow" is not defined');
-      } else {
-        prefWindow.show();
-        prefWindow.focus();
-      }
-    });
-    prefWindow.on('closed', () => {
-      prefWindow = null;
-    });
-  } else {
-    prefWindow.show();
-  }
+  windowManager.popPrefWindow();
 };
 
 const createWindow = async () => {
@@ -90,71 +59,16 @@ const createWindow = async () => {
     await installExtensions();
   }
 
-  mainWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728,
-    webPreferences:
-      process.env.NODE_ENV === 'development' || process.env.E2E_BUILD === 'true'
-        ? {
-            nodeIntegration: true,
-            nodeIntegrationInWorker: true
-          }
-        : {
-            preload: path.join(__dirname, 'dist/renderer.prod.js')
-          }
-  });
-
-  editWindow = new BrowserWindow({
-    show: false,
-    width: 1920,
-    height: 330,
-    backgroundColor: '#2e2c29',
-    frame: false,
-    webPreferences:
-      process.env.NODE_ENV === 'development' || process.env.E2E_BUILD === 'true'
-        ? {
-            nodeIntegration: true,
-            nodeIntegrationInWorker: true
-          }
-        : {
-            preload: path.join(__dirname, 'dist/renderer.prod.js')
-          }
-  });
-
-  mainWindow.loadURL(`file://${__dirname}/app.html`);
-  editWindow.loadURL(`file://${__dirname}/app.html`);
-
-  // @TODO: Use 'ready-to-show' event
-  //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
-  mainWindow.webContents.on('did-finish-load', () => {
-    if (!mainWindow) {
-      throw new Error('"mainWindow" is not defined');
-    }
-    if (process.env.START_MINIMIZED) {
-      mainWindow.minimize();
-    } else {
-      mainWindow.show();
-      mainWindow.focus();
-      editWindow?.show();
-    }
-  });
-
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
-
-  const menuBuilder = new MenuBuilder(mainWindow, popPrefWindow);
-  menuBuilder.buildMenu();
+  windowManager.createWindows();
+  if (windowManager.windows.mainWindow) {
+    const menuBuilder = new MenuBuilder(windowManager.windows, popPrefWindow);
+    menuBuilder.buildMenu();
+  }
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
 };
-
-/**
- * Add event listeners...
- */
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
@@ -169,7 +83,7 @@ app.on('ready', createWindow);
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) createWindow();
+  if (windowManager.windows.mainWindow === null) createWindow();
 });
 
 ipcMain.on('test', event => {

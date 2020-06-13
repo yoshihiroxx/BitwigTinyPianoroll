@@ -1,4 +1,5 @@
 import { Dispatch as ReduxDispatch, Store as ReduxStore, Action } from 'redux';
+import { BrowserWindow } from 'electron';
 
 export type counterStateType = {
   counter: number;
@@ -15,4 +16,8 @@ export type ActionType = {
   payload: any;
   meta: any;
   error: boolean;
+};
+
+export type AppWindowsType = {
+  [index: string]: BrowserWindow;
 };

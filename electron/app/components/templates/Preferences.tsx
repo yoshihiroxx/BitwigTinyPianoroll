@@ -112,10 +112,6 @@ export default function PreferencesComponent(props: Props) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Link to={routes.HOME}>
-        <i className="fa fa-arrow-left fa-3x" />
-      </Link>
-
       <PrefAppBar position="static">
         <Toolbar>
           <Typography variant="h6">Preferences</Typography>

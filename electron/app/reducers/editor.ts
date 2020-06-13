@@ -16,6 +16,7 @@ import { LOAD_MIDIFILE, loadMidiFile } from '../actions/debug';
 import MidiClip from '../models/MidiClip';
 import MidiList, { createMidiListByMidiFile } from '../models/MidiList';
 import { ParsedMidi } from '../models/ParsedMidi';
+import { NEW_MIDIFILE } from '../actions/menuEvents';
 
 type Actions =
   | ReturnType<typeof handleEvent>
@@ -26,10 +27,26 @@ function editReducer(state: Editor, action: Actions) {
   switch (action.type) {
     case LOAD_MIDIFILE: {
       const p = state.project;
-      let nextProject = p.setIn(['tracks', 0, 0], new MidiClip());
+      let nextProject = p.setIn(
+        ['tracks', 0, 0],
+        new MidiClip().set('name', 'Tiny Pianoroll α')
+      );
       nextProject = nextProject.setIn(
         ['tracks', 0, 0, 'midiList'],
         createMidiListByMidiFile(action.payload.parsedMidi)
+      );
+      const nextTool = state.tool.set(
+        'notes',
+        nextProject.getIn(['tracks', 0, 0, 'midiList'])
+      );
+      return new Editor({ project: nextProject, tool: nextTool });
+    }
+
+    case NEW_MIDIFILE: {
+      const p = state.project;
+      const nextProject = p.setIn(
+        ['tracks', 0, 0],
+        new MidiClip().set('name', 'Tiny Pianoroll α')
       );
       const nextTool = state.tool.set(
         'notes',

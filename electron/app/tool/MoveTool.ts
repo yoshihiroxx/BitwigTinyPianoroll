@@ -5,7 +5,6 @@ import Tool from './Tool';
 
 export default class MoveTool extends Tool {
   onClick(beatOrNote: any, noteNumber?: number) {
-    // @todo move note to select layer
     if (beatOrNote instanceof MidiNote) {
       const nextState = this.setIsDrawing(true);
       let selections = this.get('selections');
@@ -17,6 +16,7 @@ export default class MoveTool extends Tool {
       return nextState.set('selections', selections).set('drawing', drawing);
     }
     if (typeof beatOrNote === 'number') {
+      console.log(beatOrNote);
       return this.setIn(['eventStart', 'beat'], beatOrNote).setIn(
         ['eventStart', 'noteNumber'],
         noteNumber

@@ -5,8 +5,15 @@ import {
   shell,
   BrowserWindow,
   MenuItemConstructorOptions,
-  remote
+  remote,
+  dialog,
+  ipcMain
 } from 'electron';
+import MidiParser from 'midi-parser-js';
+
+import fs from 'fs';
+
+import { AppWindowsType } from './reducers/types';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -14,12 +21,12 @@ interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
 }
 
 export default class MenuBuilder {
-  mainWindow: BrowserWindow;
+  appWindows: AppWindowsType;
 
   popPrefWindow: () => void;
 
-  constructor(mainWindow: BrowserWindow, popPrefWindow: () => void) {
-    this.mainWindow = mainWindow;
+  constructor(appWindows: AppWindowsType, popPrefWindow: () => void) {
+    this.appWindows = appWindows;
     this.popPrefWindow = popPrefWindow;
   }
 
@@ -43,23 +50,23 @@ export default class MenuBuilder {
   }
 
   setupDevelopmentEnvironment() {
-    this.mainWindow.webContents.on('context-menu', (_, props) => {
+    this.appWindows.mainWindow.webContents.on('context-menu', (_, props) => {
       const { x, y } = props;
 
       Menu.buildFromTemplate([
         {
           label: 'Inspect element',
           click: () => {
-            this.mainWindow.webContents.inspectElement(x, y);
+            this.appWindows.mainWindow.webContents.inspectElement(x, y);
           }
         }
-      ]).popup({ window: this.mainWindow });
+      ]).popup({ window: this.appWindows.mainWindow });
     });
   }
 
   buildDarwinTemplate() {
     const subMenuAbout: DarwinMenuItemConstructorOptions = {
-      label: 'Electron',
+      label: 'BitwigTinyPianoroll',
       submenu: [
         {
           label: 'About ElectronReact',
@@ -84,7 +91,6 @@ export default class MenuBuilder {
           label: 'Preferences',
           accelerator: 'Command+,',
           click: () => {
-            console.log('open pref');
             this.popPrefWindow();
           }
         },
@@ -94,6 +100,43 @@ export default class MenuBuilder {
           accelerator: 'Command+Q',
           click: () => {
             app.quit();
+          }
+        }
+      ]
+    };
+    const subMenuFile: DarwinMenuItemConstructorOptions = {
+      label: 'File',
+      submenu: [
+        {
+          label: 'New Midi File',
+          click: () => {
+            this.appWindows.editWindow.webContents.send('new-midifile');
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Open Midi File (Maschine)',
+          click: () => {
+            dialog
+              .showOpenDialog({
+                properties: ['openFile', 'multiSelections'],
+                filters: [
+                  { name: 'Midi Files', extensions: ['mid'] },
+                  { name: 'All Files', extensions: ['*'] }
+                ]
+              })
+              .then(result => {
+                const file = fs.readFileSync(result.filePaths[0], 'base64');
+                const parsedMidi = MidiParser.parse(file);
+                this.appWindows.editWindow.webContents.send(
+                  'load-midifile',
+                  parsedMidi
+                );
+                return true;
+              })
+              .catch(err => {
+                console.log(err);
+              });
           }
         }
       ]
@@ -111,13 +154,6 @@ export default class MenuBuilder {
           label: 'Select All',
           accelerator: 'Command+A',
           selector: 'selectAll:'
-        },
-        { type: 'separator' },
-        {
-          label: 'Open Midi File (Maschine)',
-          click: () => {
-            console.log('open');
-          }
         }
       ]
     };
@@ -128,21 +164,23 @@ export default class MenuBuilder {
           label: 'Reload',
           accelerator: 'Command+R',
           click: () => {
-            this.mainWindow.webContents.reload();
+            this.appWindows.mainWindow.webContents.reload();
           }
         },
         {
           label: 'Toggle Full Screen',
           accelerator: 'Ctrl+Command+F',
           click: () => {
-            this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
+            this.appWindows.mainWindow.setFullScreen(
+              !this.appWindows.mainWindow.isFullScreen()
+            );
           }
         },
         {
           label: 'Toggle Developer Tools',
           accelerator: 'Alt+Command+I',
           click: () => {
-            this.mainWindow.webContents.toggleDevTools();
+            this.appWindows.mainWindow.webContents.toggleDevTools();
           }
         }
       ]
@@ -154,7 +192,9 @@ export default class MenuBuilder {
           label: 'Toggle Full Screen',
           accelerator: 'Ctrl+Command+F',
           click: () => {
-            this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
+            this.appWindows.mainWindow.setFullScreen(
+              !this.appWindows.mainWindow.isFullScreen()
+            );
           }
         }
       ]
@@ -210,7 +250,14 @@ export default class MenuBuilder {
         ? subMenuViewDev
         : subMenuViewProd;
 
-    return [subMenuAbout, subMenuEdit, subMenuView, subMenuWindow, subMenuHelp];
+    return [
+      subMenuAbout,
+      subMenuFile,
+      subMenuEdit,
+      subMenuView,
+      subMenuWindow,
+      subMenuHelp
+    ];
   }
 
   buildDefaultTemplate() {
@@ -223,10 +270,16 @@ export default class MenuBuilder {
             accelerator: 'Ctrl+O'
           },
           {
+            label: 'Open Midi File (Maschine)',
+            click: () => {
+              // @todo support menus for windows.
+            }
+          },
+          {
             label: '&Close',
             accelerator: 'Ctrl+W',
             click: () => {
-              this.mainWindow.close();
+              this.app.mainWindow.close();
             }
           }
         ]
@@ -241,15 +294,15 @@ export default class MenuBuilder {
                   label: '&Reload',
                   accelerator: 'Ctrl+R',
                   click: () => {
-                    this.mainWindow.webContents.reload();
+                    this.app.mainWindow.webContents.reload();
                   }
                 },
                 {
                   label: 'Toggle &Full Screen',
                   accelerator: 'F11',
                   click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
+                    this.app.mainWindow.setFullScreen(
+                      !this.app.mainWindow.isFullScreen()
                     );
                   }
                 },
@@ -257,7 +310,7 @@ export default class MenuBuilder {
                   label: 'Toggle &Developer Tools',
                   accelerator: 'Alt+Ctrl+I',
                   click: () => {
-                    this.mainWindow.webContents.toggleDevTools();
+                    this.app.mainWindow.webContents.toggleDevTools();
                   }
                 }
               ]
@@ -266,8 +319,8 @@ export default class MenuBuilder {
                   label: 'Toggle &Full Screen',
                   accelerator: 'F11',
                   click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
+                    this.app.mainWindow.setFullScreen(
+                      !this.app.mainWindow.isFullScreen()
                     );
                   }
                 }

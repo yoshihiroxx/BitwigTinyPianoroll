@@ -20,6 +20,7 @@ export default class EraserTool extends Tool {
     if (!this.get('isDrawing')) return this;
 
     if (beatOrNote instanceof MidiNote) {
+      console.log('dragging note');
       const mn = beatOrNote;
       if (!this.hasInSelections(mn)) {
         let notes = this.getIn(['selections', 'notes']);
@@ -27,6 +28,7 @@ export default class EraserTool extends Tool {
         return this.setIn(['selections', 'notes'], notes);
       }
     } else if (typeof beatOrNote === 'number' && typeof noteNum === 'number') {
+      console.log('dragging grid');
       return this;
     }
     return this;

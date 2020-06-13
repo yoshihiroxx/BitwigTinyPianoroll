@@ -53,6 +53,9 @@ export default class Ruler extends React.Component<RulerStateType> {
   }
 
   resize() {
+    this.layers.grid.removeChildren().forEach(child => {
+      child.destroy();
+    });
     this.domSize = {
       x: this.container.current.clientWidth,
       y: this.container.current.clientHeight

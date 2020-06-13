@@ -141,7 +141,6 @@ export function onKeyUp(event) {
     const { editor, preferences } = getState();
     const tool = editor.get('tool');
     const matchedAction = matchedActionName(event, preferences.keyBinds, true);
-    console.log(matchedAction);
     switch (matchedAction) {
       case 'keepSelectionNotes':
         dispatch(setKeepSelections(false));

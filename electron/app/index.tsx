@@ -8,6 +8,8 @@ import './app.global.css';
 import { loadMidiFile } from './actions/debug';
 import Model from './models/ModelCreator';
 import Project from './models/Project';
+import { onLoadMidiFile, onCreateNewMidiFile } from './actions/menuEvents';
+import { onChangeTheme, onChangePreferences } from './actions/preferences';
 // import initMainMenu from './menu/MainMenu';
 
 const store = configureStore();
@@ -41,6 +43,22 @@ ipcRenderer.send('test');
 ipcRenderer.on('test', (event, arg) => {
   console.log('ipc connection test : ');
   console.log(arg);
+});
+
+ipcRenderer.on('update-preferences', (event, arg) => {
+  // @todo update preferences
+});
+
+ipcRenderer.on('update-theme', (event, arg) => {
+  store.dispatch(onChangeTheme(arg));
+});
+
+ipcRenderer.on('load-midifile', (event, parsedMidi) => {
+  store.dispatch(onLoadMidiFile(parsedMidi));
+});
+
+ipcRenderer.on('new-midifile', event => {
+  store.dispatch(onCreateNewMidiFile());
 });
 
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
