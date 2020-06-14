@@ -17,7 +17,7 @@ export default function BTPWindowFrame(props: Props) {
   const { clipName } = props;
   return (
     <div className={styles.container}>
-      {clipName}
+      <span>{clipName}</span>
       <div className={styles.buttonGroup} />
       <button
         type="button"

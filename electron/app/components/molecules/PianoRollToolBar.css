@@ -1,4 +1,32 @@
 .pianoRollToolBar{
   width: 100%;
-  background:#f0f;
+  font-size: 12px;
+  background:#2A2B2E;
+  padding:6px 0;
+  color: #aaa;
+}
+
+.pianoRollToolBar  span{
+  margin-left: 8px;
+}
+
+.pianoRollToolBar select{
+  background: #40454C;
+  border-radius: 2px;
+  border-style: none;
+  color: #7389E7;
+  outline:0;
+}
+
+.pianoRollToolBar button{
+  background: #40454C;
+  color: #7389E7;
+  margin-left:8px;
+  border: none;
+  outline:0;
+}
+
+.pianoRollToolBar button:active{
+  background: #30353C;
+  color: #7389E7;
 }

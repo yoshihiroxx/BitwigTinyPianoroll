@@ -36,7 +36,20 @@ export default class LengthTool extends Tool {
   }
 
   onRelease(beat: number, noteNum: number) {
-    const nextState = this.setIsDrawing(false);
+    let nextState = this.setIsDrawing(false);
+    nextState = nextState.set(
+      'noteLength',
+      nextState
+        .getIn(['drawing', 'notes'])
+        .get(0)
+        .get('lengthInBeats')
+    );
+    console.log(
+      nextState
+        .getIn(['drawing', 'notes'])
+        .get(0)
+        .get('lengthInBeats')
+    );
     return nextState;
   }
 

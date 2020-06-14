@@ -239,10 +239,16 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     this.resize();
   }
 
-  componentDidUpdate(prevProps) {
-    const shouldRerenderCommonNotes = !this.props.tool.notes.equals(
+  componentDidUpdate(prevProps, prevState) {
+    let shouldRerenderCommonNotes = !this.props.tool.notes.equals(
       prevProps.tool.notes
     );
+
+    const { octave } = this.state;
+    if (prevState.octave !== octave) {
+      shouldRerenderCommonNotes = true;
+    }
+
     this.renderNotes(shouldRerenderCommonNotes);
     this.updateCursorTextures();
   }
@@ -250,9 +256,12 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
   onChangeOctave(applyValue: number) {
     const { octave } = this.state;
     this.setState({ octave: octave + applyValue });
-    if (octave > 9) this.setState({ octave: 9 });
-    if (octave < 0) this.setState({ octave: 0 });
-    this.resize();
+    const nextOctave = octave + applyValue;
+    console.log(nextOctave);
+    if (nextOctave > 9) this.setState({ octave: 9 });
+    else if (nextOctave < 0) this.setState({ octave: 0 });
+    else this.setState({ octave: nextOctave });
+    // this.resize();
   }
 
   onChangeCref(cref: string) {

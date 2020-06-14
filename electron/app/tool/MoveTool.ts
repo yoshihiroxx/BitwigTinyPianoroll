@@ -6,10 +6,16 @@ import Tool from './Tool';
 export default class MoveTool extends Tool {
   onClick(beatOrNote: any, noteNumber?: number) {
     if (beatOrNote instanceof MidiNote) {
-      const nextState = this.setIsDrawing(true);
+      let nextState = this.setIsDrawing(true);
       let selections = this.get('selections');
+
+      // if note isn't selected yet.
       if (!selections.hasNote(beatOrNote)) {
         selections = new MidiList({ notes: List([beatOrNote]) });
+        nextState = nextState.set(
+          'noteLength',
+          beatOrNote.get('lengthInBeats')
+        );
       }
       selections = selections.sortNoteToFirst(beatOrNote);
       const drawing = selections;

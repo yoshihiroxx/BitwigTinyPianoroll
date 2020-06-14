@@ -9,7 +9,13 @@ export default class EraserTool extends Tool {
     let nextState = this.setIsDrawing(true);
     nextState = nextState.set('selections', new MidiList());
     if (beatOrNote instanceof MidiNote) {
-      this.getIn(['selections', 'notes']).find((note, id) => {});
+      const mn = beatOrNote;
+      if (this.get(['selections']).hasNote(mn)) {
+      } else {
+        let notes = this.getIn(['selections', 'notes']);
+        notes = notes.push(mn);
+        nextState = nextState.setIn(['selections', 'notes'], notes);
+      }
     } else if (typeof beatOrNote === 'number' && typeof noteNum === 'number') {
       console.log('nothing to do when clicked on grid with a EraserTool.');
     }

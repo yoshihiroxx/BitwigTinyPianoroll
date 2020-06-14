@@ -61,7 +61,7 @@ export default class Ruler extends React.Component<RulerStateType> {
       y: this.container.current.clientHeight
     };
     const rect = new PIXI.Graphics();
-    rect.beginFill(0x444444);
+    rect.beginFill(0x2f3136);
     rect.drawRect(0, 0, this.domSize.x, this.domSize.y);
     rect.endFill();
     this.layers.grid.addChild(rect);

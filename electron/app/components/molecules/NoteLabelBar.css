@@ -1,6 +1,8 @@
 .noteLabelBar {
-  background: #333;
+  background: #2F3136;
   /* width: 70px; */
+  border-right: 2px solid #3A3C43;
+
 }
 
 .noteLabelBar ul{
@@ -11,5 +13,6 @@
 li{
   font-size: 12px;
   height: 25px;
-  color: #999;
+  color: #888;
+  text-align: right;
 }

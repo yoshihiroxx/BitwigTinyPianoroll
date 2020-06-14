@@ -27,11 +27,11 @@ export default function PianoRollToolBar(props: Props) {
   return (
     <div className={styles.pianoRollToolBar}>
       <div>
-        cref
+        {/* <span>cref</span>
         <ToggleButton
           onClick={actions.onChangeCref}
           items={items.toggleCrefButtons}
-        />
+        /> */}
         <span>scale</span>
         <select
           name="scale"

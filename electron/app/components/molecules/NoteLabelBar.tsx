@@ -19,7 +19,7 @@ export default function NoteLabelBar(props: Props) {
     <div className={styles.noteLabelBar}>
       <ul>
         <li>{`F${octave + 1}`}</li>
-        <li>{`F${octave + 1}`}</li>
+        <li>{`D${octave + 1}`}</li>
         <li>{`B${octave}`}</li>
         <li>{`G${octave}`}</li>
         <li>{`A${octave}`}</li>
