@@ -32,7 +32,7 @@ export default class WindowManager {
     this.windows.editWindow = new BrowserWindow({
       show: false,
       width: 1920,
-      height: 360,
+      height: 370,
       backgroundColor: '#2e2c29',
       frame: false,
       webPreferences:
@@ -94,7 +94,7 @@ export default class WindowManager {
       }
       if (process.env.START_MINIMIZED) {
         this.windows.mainWindow.minimize();
-      } else {
+      } else if (process.env.NODE_ENV === 'development') {
         this.windows.mainWindow.show();
         this.windows.mainWindow.focus();
       }

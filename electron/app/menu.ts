@@ -135,7 +135,29 @@ export default class MenuBuilder {
                 return true;
               })
               .catch(err => {
-                console.log(err);
+                throw new Error(err);
+              });
+          }
+        },
+        {
+          label: 'Export Clip as MIDI',
+          click: () => {
+            dialog
+              .showSaveDialog({
+                title: 'Export Clip as MIDI',
+                defaultPath: 'untitled.mid'
+              })
+              .then(result => {
+                console.log(result);
+                if (result.canceled) return true;
+                this.appWindows.editWindow.webContents.send(
+                  'export-clip',
+                  result.filePath
+                );
+                return true;
+              })
+              .catch(err => {
+                throw new Error(err);
               });
           }
         }

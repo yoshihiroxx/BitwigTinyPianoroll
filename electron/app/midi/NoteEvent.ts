@@ -6,7 +6,6 @@ export default function noteEvent(
   noteNumber: number,
   velocity: number
 ): ArrayBuffer {
-  console.log(deltaTime);
   const eventTypeValue = velocity > 0 ? 0x9 : 0x8;
   const deltaTimeBuffer = util.createVariableLengthBuffer(deltaTime);
   const buffer = new ArrayBuffer(deltaTimeBuffer.byteLength + 1 + 1 + 1);
@@ -24,6 +23,5 @@ export default function noteEvent(
   view.setUint8(offset, noteNumber);
   offset += 1;
   view.setUint8(offset, velocity);
-  console.log(view.buffer);
   return view.buffer;
 }

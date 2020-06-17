@@ -11,6 +11,8 @@ import Project from './models/Project';
 import { onLoadMidiFile, onCreateNewMidiFile } from './actions/menuEvents';
 import { onChangeTheme, onChangePreferences } from './actions/preferences';
 // import initMainMenu from './menu/MainMenu';
+import MidiWriter from './midi/MidiWriter';
+import MidiClip from './models/MidiClip';
 
 const store = configureStore();
 
@@ -59,6 +61,18 @@ ipcRenderer.on('load-midifile', (event, parsedMidi) => {
 
 ipcRenderer.on('new-midifile', event => {
   store.dispatch(onCreateNewMidiFile());
+});
+
+ipcRenderer.on('export-clip', (event, filePath) => {
+  const state = store.getState();
+  const writer = new MidiWriter();
+  // @todo referctoring
+  const ml = state.editor.tool.notes;
+  const midiClip = new MidiClip().set('midiList', ml);
+  const buffer = writer.buildFromClip(midiClip);
+  const fs = remote.require('fs');
+  console.log(fs);
+  fs.writeFileSync(filePath, Buffer.from(buffer));
 });
 
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;

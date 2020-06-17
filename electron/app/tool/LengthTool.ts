@@ -27,7 +27,11 @@ export default class LengthTool extends Tool {
         beatOrNote - clicked.get('startBeat') - clicked.get('lengthInBeats');
       const nextDrawingList = this.getIn(['drawing', 'notes']).map(
         (n: MidiNote) => {
-          return n.set('lengthInBeats', n.get('lengthInBeats') + offsetBeat);
+          let lengthInBeats = n.get('lengthInBeats') + offsetBeat;
+          if (lengthInBeats < 0.25) {
+            lengthInBeats = 0.25;
+          }
+          return n.set('lengthInBeats', lengthInBeats);
         }
       );
       return this.setIn(['drawing', 'notes'], nextDrawingList);

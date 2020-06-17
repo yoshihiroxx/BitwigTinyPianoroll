@@ -67,7 +67,7 @@ describe('midi', () => {
       let clip = new MidiClip(midiArray);
       clip = clip.set('name', 'MidiClip');
       const buffer = mw.buildFromClip(clip);
-      fs.writeFileSync('./test/midi/written.mid', new Buffer.from(buffer));
+      fs.writeFileSync('./test/midi/written.mid', Buffer.from(buffer));
     });
 
     test('noteEvent', async () => {
