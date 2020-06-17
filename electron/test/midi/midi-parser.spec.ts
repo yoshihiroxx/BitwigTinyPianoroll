@@ -6,9 +6,13 @@ describe('Model Clip', () => {
     expect(typeof MidiParser).toBe('object');
   });
   test('load MIDI file', async () => {
-    const file = await fs.readFile('./test/midi/testpattern.mid', 'base64');
+    const file = await fs.readFile('./test/midi/written.mid', 'base64');
     const midiArray = MidiParser.parse(file);
-    console.log(midiArray.track[0]);
-    console.log(midiArray.track[1]);
+    console.log(JSON.stringify(midiArray, null, 2));
+  });
+  test('load bitwig file', async () => {
+    const file = await fs.readFile('./test/midi/exportedByLogic.mid', 'base64');
+    const midiArray = MidiParser.parse(file);
+    // console.log(JSON.stringify(midiArray, null, 2));
   });
 });

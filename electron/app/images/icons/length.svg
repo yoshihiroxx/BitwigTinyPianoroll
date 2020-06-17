@@ -5,6 +5,6 @@
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="icons/length" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <polygon id="Combined-Shape" stroke="#000000" fill="#E0E0E0" fill-rule="nonzero" points="13 6.99 16 6.99 12 3 8 6.99 11 6.99 11 17.01 8 17.01 12 21 16 17.01 13 17.01"></polygon>
+        <path d="M17.38625,13.75 L7.11375,13.75 L7.11375,17.8342466 L1.41877655,12.125 L7.11375,6.41575343 L7.11375,10.5 L17.38625,10.5 L17.38625,6.41575343 L23.0812235,12.125 L17.38625,17.8342466 L17.38625,13.75 Z" id="Combined-Shape-Copy" stroke="#000000" fill="#E0E0E0" fill-rule="nonzero"></path>
     </g>
 </svg>

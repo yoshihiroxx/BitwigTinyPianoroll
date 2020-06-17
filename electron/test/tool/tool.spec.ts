@@ -42,7 +42,6 @@ describe('Tool', () => {
   });
 
   test('handleTool', () => {
-    console.log(et.get('notes'));
     expect(et instanceof Tool).toBeTruthy();
     expect(et instanceof EraserTool).toBeTruthy();
     expect(et instanceof PenTool).toBeFalsy();

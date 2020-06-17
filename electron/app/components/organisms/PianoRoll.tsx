@@ -76,12 +76,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     texts: pixi.Container;
   };
 
-  scale: {
-    gridIndices: Array<number>;
-    signatures: Array<number>;
-    keyNames: Array<string>;
-    textObjects: Array<pixi.Text>;
-  };
+  scale: ScaleType;
 
   style: {
     cursor: CSSProperties;
@@ -95,24 +90,8 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
       magnet: true,
       scales: Scales
     };
-    this.scale = {
-      gridIndices: [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6],
-      signatures: [1, 1, 1, 1, 1, 1, 1],
-      keyNames: [
-        'C',
-        'C#',
-        'D',
-        'D#',
-        'E',
-        'F',
-        'F#',
-        'G',
-        'G#',
-        'A',
-        'A#',
-        'B'
-      ]
-    };
+    const [initialScale] = Scales;
+    this.scale = initialScale;
 
     this.domSize = {
       x: 1,
@@ -274,8 +253,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
   onChangeScale(scaleName: string) {
     const { scales } = this.state;
     const scale = scales.find((s: ScaleType) => s.name === scaleName);
-    this.scale.keyNames = scale.keyNames;
-    this.scale.signatures = scale.signatures;
+    this.scale = scale;
     this.resize();
   }
 
@@ -325,7 +303,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     const eraserCursor = "url('./images/icons/eraser.svg') 3 2,auto";
     const moveCursor = "url('./images/icons/move.svg') 12 12,auto";
     const rectCurosr = "url('./images/icons/rect.svg') 12 12,auto";
-    const lengthCursor = "url('./images/icons/length.svg') 12 12,auto";
+    const lengthCursor = "url('./images/icons/length.svg') 12 12,ew-resize";
     if (tool instanceof PenTool) {
       graphics.cursor = penCursor;
     } else if (tool instanceof EraserTool) {

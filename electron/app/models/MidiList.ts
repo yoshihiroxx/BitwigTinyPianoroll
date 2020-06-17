@@ -59,7 +59,7 @@ export default class MidiList extends MidiListRecord {
   }
 }
 
-export function createMidiListByMidiFile(parsedMidi: ParsedMidi) {
+export function createMidiListByMidiFile(parsedMidi: ParsedMidi): MidiList {
   let result: MidiList = new MidiList();
   const ppq: number = parsedMidi.timeDivision;
   let sumOfDeltaTime = 0;
