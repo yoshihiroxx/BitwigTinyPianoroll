@@ -386,11 +386,11 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
 
   private updateCursorTextures() {
     const { tool } = this.props;
-    const penCursor = "url('./images/icons/pen.svg') 3 2, auto";
-    const eraserCursor = "url('./images/icons/eraser.svg') 3 2,auto";
-    const moveCursor = "url('./images/icons/move.svg') 12 12,auto";
-    const rectCursor = "url('./images/icons/rect.svg') 12 12,auto";
-    const lengthCursor = "url('./images/icons/length.svg') 12 12,auto";
+    const penCursor = `url(${penSvg}) 3 2, auto`;
+    const eraserCursor = `url(${eraserSvg}) 3 2,auto`;
+    const moveCursor = `url(${moveSvg}) 12 12,auto`;
+    const rectCursor = `url(${rectSvg}) 12 12,auto`;
+    const lengthCursor = `url(${lengthSvg}) 12 12,ew-resize`;
 
     this.canvas.plugins.interaction.cursorStyles.pen = penCursor;
     this.canvas.plugins.interaction.cursorStyles.move = moveCursor;
