@@ -8,7 +8,10 @@ export default class WindowManager {
   windows: AppWindowsType;
 
   constructor() {
-    this.rootPath = path.resolve(__dirname, '../');
+    this.rootPath =
+      process.env.NODE_ENV === 'development'
+        ? path.resolve(__dirname, '..')
+        : __dirname;
     this.windows = {
       mainWindow: null,
       editWindow: null,
@@ -43,10 +46,11 @@ export default class WindowManager {
               nodeIntegrationInWorker: true
             }
           : {
-              preload: path.join(__dirname, 'dist/renderer.prod.js')
+              preload: path.join(this.rootPath, 'dist/renderer.prod.js'),
+              backgroundThrottling: false
             }
     });
-    this.windows.editWindow.loadURL(`file://${__dirname}/app.html#editor`);
+    this.windows.editWindow.loadURL(`file://${this.rootPath}/app.html#editor`);
     /**
      * Add event listeners...
      */
@@ -81,10 +85,11 @@ export default class WindowManager {
               nodeIntegrationInWorker: true
             }
           : {
-              preload: path.join(__dirname, 'dist/renderer.prod.js')
+              preload: path.join(this.rootPath, 'dist/renderer.prod.js'),
+              backgroundThrottling: false
             }
     });
-    this.windows.mainWindow.loadURL(`file://${__dirname}/app.html`);
+    this.windows.mainWindow.loadURL(`file://${this.rootPath}/app.html`);
     /**
      * Add event listeners...
      */
@@ -118,12 +123,13 @@ export default class WindowManager {
                 nodeIntegrationInWorker: true
               }
             : {
-                preload: path.join(__dirname, 'dist/renderer.prod.js')
+                preload: path.join(this.rootPath, 'dist/renderer.prod.js'),
+                backgroundThrottling: false
               }
       });
 
       this.windows.prefWindow.loadURL(
-        `file://${__dirname}/app.html#preferences`
+        `file://${this.rootPath}/app.html#preferences`
       );
       this.windows.prefWindow.webContents.on('did-finish-load', () => {
         if (!this.windows.prefWindow) {

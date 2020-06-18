@@ -69,7 +69,7 @@ export default class MenuBuilder {
       label: 'BitwigTinyPianoroll',
       submenu: [
         {
-          label: 'About ElectronReact',
+          label: 'About TinyPianoroll',
           selector: 'orderFrontStandardAboutPanel:'
         },
         { type: 'separator' },

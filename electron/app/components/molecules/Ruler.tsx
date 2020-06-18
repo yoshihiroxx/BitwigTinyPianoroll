@@ -17,7 +17,9 @@ type RulerStateType = {
 };
 
 export default class Ruler extends React.Component<RulerStateType> {
-  canvas: PIXI.Application;
+  canvas: PIXI.Renderer;
+
+  stage: PIXI.Container;
 
   container: any;
 
@@ -32,7 +34,8 @@ export default class Ruler extends React.Component<RulerStateType> {
 
   constructor(props: RulerStateType) {
     super(props);
-    this.canvas = new PIXI.Application({});
+    this.canvas = new PIXI.Renderer({});
+    this.stage = new PIXI.Container();
     this.container = React.createRef();
     this.domSize = { x: 0, y: 0 };
 
@@ -65,11 +68,12 @@ export default class Ruler extends React.Component<RulerStateType> {
     rect.drawRect(0, 0, this.domSize.x, this.domSize.y);
     rect.endFill();
     this.layers.grid.addChild(rect);
-    this.canvas.renderer.resize(this.domSize.x, this.domSize.y);
-    this.canvas.stage.addChild(this.layers.grid);
-    this.canvas.stage.interactiveChildren = false;
+    this.canvas.resize(this.domSize.x, this.domSize.y);
+    this.stage.addChild(this.layers.grid);
+    this.stage.interactiveChildren = false;
     this.renderGridLines();
     this.renderBeatNumbers();
+    this.canvas.render(this.stage);
   }
 
   renderBeatNumbers() {
@@ -101,7 +105,7 @@ export default class Ruler extends React.Component<RulerStateType> {
         const xpos = (width / 4) * beats;
         line.lineStyle(1, lineColors.vertical.quarter.value);
         line.alpha = lineColors.vertical.quarter.alpha;
-        line.moveTo(xpos, 0).lineTo(xpos, this.canvas.renderer.view.height);
+        line.moveTo(xpos, 0).lineTo(xpos, this.canvas.view.height);
         // line.endFill();
         this.layers.grid.addChild(line);
       }

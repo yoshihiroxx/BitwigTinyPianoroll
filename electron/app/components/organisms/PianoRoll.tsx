@@ -58,9 +58,11 @@ export type PianorollStateType = {
 };
 
 export default class Pianoroll extends React.Component<PianorollStateType> {
-  canvas: any;
+  canvas: pixi.Renderer;
 
   container: any;
+
+  stage: pixi.Container;
 
   eventStart: {
     x: number;
@@ -104,14 +106,22 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
       y: 1
     };
     const { theme } = this.props;
-    this.canvas = new pixi.Application({
+    this.canvas = new pixi.Renderer({
       width: 700,
       height: 256,
-      antialias: true,
       resolution: 2,
       backgroundColor: theme.pianoroll.background.value
     });
 
+    this.stage = new pixi.Container();
+
+    const ticker = pixi.Ticker.shared;
+    ticker.autoStart = false;
+    ticker.stop();
+    ticker.maxFPS = 60;
+
+    // this.canvas.renderer.plugins.interaction.interactionFrequency = 300;
+    // this.canvas.renderer.plugins.interaction.useSystemTicker = false;
     this.layers = {
       effects: new pixi.Container(),
       notes: new pixi.Container(),
@@ -121,7 +131,6 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     };
 
     this.container = React.createRef();
-    this.canvas.renderer.autoResize = true;
 
     this.layers.grid.interactive = true;
 
@@ -199,16 +208,16 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
       onMouseEvent('release', clickedBeat, noteNumber);
     });
 
-    this.renderGridLines();
-    this.renderMidiNotes();
-    this.canvas.stage.addChild(this.layers.grid);
-    this.canvas.stage.addChild(this.layers.notes);
-    this.canvas.stage.addChild(this.layers.eventNotes);
-    this.canvas.stage.addChild(this.layers.texts);
+    // this.renderGridLines();
+    // this.renderMidiNotes();
+    this.stage.addChild(this.layers.grid);
+    this.stage.addChild(this.layers.notes);
+    this.stage.addChild(this.layers.eventNotes);
+    this.stage.addChild(this.layers.texts);
     // this.layers.eventNotes.interactiveChildren = false;
     this.layers.texts.interactiveChildren = false;
     this.layers.effects.interactiveChildren = false;
-    this.canvas.stage.addChild(this.layers.effects);
+    this.stage.addChild(this.layers.effects);
   }
 
   componentDidMount() {
@@ -228,14 +237,13 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     let shouldRerenderCommonNotes = !this.props.tool.notes.equals(
       prevProps.tool.notes
     );
-
     const { octave } = this.state;
     if (prevState.octave !== octave) {
       shouldRerenderCommonNotes = true;
     }
-
     this.renderNotes(shouldRerenderCommonNotes);
     this.updateCursorTextures();
+    this.canvas.render(this.stage);
   }
 
   onChangeOctave(applyValue: number) {
@@ -325,11 +333,9 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     }
   }
 
-  calcBeat(mouseX: number) {
-    const { magnet } = this.state;
-    const beatWidth = this.domSize.x / (4 * 8);
-    const beat = mouseX / beatWidth;
-    return magnet ? (Math.round((beat * 100) / 25) * 25) / 100 : beat;
+  private getCurrentTool() {
+    const { tool } = this.props;
+    return tool;
   }
 
   calcNoteNum(mouseY: number) {
@@ -354,9 +360,11 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     return rootNoteNum + offsetOctave + scaleIndex + semitoneOffset;
   }
 
-  private getCurrentTool() {
-    const { tool } = this.props;
-    return tool;
+  calcBeat(mouseX: number) {
+    const { magnet } = this.state;
+    const beatWidth = this.domSize.x / (4 * 8);
+    const beat = mouseX / beatWidth;
+    return magnet ? (Math.round((beat * 100) / 25) * 25) / 100 : beat;
   }
 
   resize() {
@@ -372,7 +380,8 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     );
     this.renderGridLines();
     this.renderNotes(true);
-    this.canvas.renderer.resize(this.domSize.x, this.domSize.y);
+    this.canvas.resize(this.domSize.x, this.domSize.y);
+    this.canvas.render(this.stage);
   }
 
   private updateCursorTextures() {
@@ -383,32 +392,32 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     const rectCursor = "url('./images/icons/rect.svg') 12 12,auto";
     const lengthCursor = "url('./images/icons/length.svg') 12 12,auto";
 
-    this.canvas.renderer.plugins.interaction.cursorStyles.pen = penCursor;
-    this.canvas.renderer.plugins.interaction.cursorStyles.move = moveCursor;
-    this.canvas.renderer.plugins.interaction.cursorStyles.eraser = eraserCursor;
-    this.canvas.renderer.plugins.interaction.cursorStyles.rect = rectCursor;
-    this.canvas.renderer.plugins.interaction.cursorStyles.length = lengthCursor;
+    this.canvas.plugins.interaction.cursorStyles.pen = penCursor;
+    this.canvas.plugins.interaction.cursorStyles.move = moveCursor;
+    this.canvas.plugins.interaction.cursorStyles.eraser = eraserCursor;
+    this.canvas.plugins.interaction.cursorStyles.rect = rectCursor;
+    this.canvas.plugins.interaction.cursorStyles.length = lengthCursor;
 
     if (tool instanceof PenTool) {
       this.layers.grid.cursor = penCursor;
-      this.canvas.renderer.plugins.interaction.cursorStyles.default = 'pen';
-      this.canvas.renderer.plugins.interaction.setCursorMode('pen');
+      this.canvas.plugins.interaction.cursorStyles.default = 'pen';
+      this.canvas.plugins.interaction.setCursorMode('pen');
     } else if (tool instanceof EraserTool) {
       this.layers.grid.cursor = eraserCursor;
-      this.canvas.renderer.plugins.interaction.cursorStyles.default = 'eraser';
-      this.canvas.renderer.plugins.interaction.setCursorMode('eraser');
+      this.canvas.plugins.interaction.cursorStyles.default = 'eraser';
+      this.canvas.plugins.interaction.setCursorMode('eraser');
     } else if (tool instanceof MoveTool) {
       this.layers.grid.cursor = moveCursor;
-      this.canvas.renderer.plugins.interaction.cursorStyles.default = 'move';
-      this.canvas.renderer.plugins.interaction.setCursorMode('move');
+      this.canvas.plugins.interaction.cursorStyles.default = 'move';
+      this.canvas.plugins.interaction.setCursorMode('move');
     } else if (tool instanceof RectTool) {
       this.layers.grid.cursor = rectCursor;
-      this.canvas.renderer.plugins.interaction.cursorStyles.default = 'rect';
-      this.canvas.renderer.plugins.interaction.setCursorMode('rect');
+      this.canvas.plugins.interaction.cursorStyles.default = 'rect';
+      this.canvas.plugins.interaction.setCursorMode('rect');
     } else if (tool instanceof LengthTool) {
       this.layers.grid.cursor = lengthCursor;
-      this.canvas.renderer.plugins.interaction.cursorStyles.default = 'length';
-      this.canvas.renderer.plugins.interaction.setCursorMode('length');
+      this.canvas.plugins.interaction.cursorStyles.default = 'length';
+      this.canvas.plugins.interaction.setCursorMode('length');
     } else {
       throw new Error(`${tool}: this tool functions has not implemented yet.`);
     }
@@ -465,7 +474,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
         line.beginFill();
         line.lineStyle(1, lineColors.vertical.quarter.value);
         line.alpha = lineColors.vertical.quarter.alpha;
-        line.moveTo(xpos, 0).lineTo(xpos, this.canvas.renderer.view.height);
+        line.moveTo(xpos, 0).lineTo(xpos, this.canvas.view.height);
         line.endFill();
         this.layers.grid.addChild(line);
       }
@@ -610,7 +619,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
       if (y + 1 + height - 2 > this.domSize.y) {
         rect.drawRect(
           x,
-          this.domSize.y - 1,
+          this.domSize.y - 3,
           note.get('lengthInBeats') * width,
           3
         );
