@@ -22,6 +22,12 @@ import MidiNote from '../../models/MidiNote';
 import Theme from '../../models/Theme';
 import KeyBinds, { KeyBind } from '../../models/KeyBinds';
 
+import penSvg from '../../images/icons/pen.svg';
+import eraserSvg from '../../images/icons/eraser.svg';
+import lengthSvg from '../../images/icons/length.svg';
+import moveSvg from '../../images/icons/move.svg';
+import rectSvg from '../../images/icons/rect.svg';
+
 export type PianorollStateType = {
   handleTool: (toolType: string) => void;
   onKeyUp: () => void;
@@ -299,11 +305,11 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     const { tool } = this.props;
     const graphics = g;
 
-    const penCursor = "url('./images/icons/pen.svg') 3 2, auto";
-    const eraserCursor = "url('./images/icons/eraser.svg') 3 2,auto";
-    const moveCursor = "url('./images/icons/move.svg') 12 12,auto";
-    const rectCurosr = "url('./images/icons/rect.svg') 12 12,auto";
-    const lengthCursor = "url('./images/icons/length.svg') 12 12,ew-resize";
+    const penCursor = `url(${penSvg}) 3 2, auto`;
+    const eraserCursor = `url(${eraserSvg}) 3 2,auto`;
+    const moveCursor = `url(${moveSvg}) 12 12,auto`;
+    const rectCurosr = `url(${rectSvg}) 12 12,auto`;
+    const lengthCursor = `url(${lengthSvg}) 12 12,ew-resize`;
     if (tool instanceof PenTool) {
       graphics.cursor = penCursor;
     } else if (tool instanceof EraserTool) {

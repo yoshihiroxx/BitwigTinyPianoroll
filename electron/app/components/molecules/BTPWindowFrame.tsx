@@ -2,6 +2,7 @@ import React from 'react';
 import { remote } from 'electron';
 import CloseButton from '../atoms/CloseButton';
 import styles from './BTPWindowFrame.css';
+import closeSvg from '../../images/icons/close.svg';
 
 const onClickClose = () => {
   const { BrowserWindow } = remote;
@@ -26,7 +27,7 @@ export default function BTPWindowFrame(props: Props) {
         }}
         className={styles.button}
       >
-        <img src="./images/icons/close.svg" alt="close" />
+        <img src={closeSvg} alt="close" />
       </button>
     </div>
   );

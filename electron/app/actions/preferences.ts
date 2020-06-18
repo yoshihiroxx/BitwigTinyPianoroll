@@ -16,8 +16,11 @@ const readfile = (_path: string) => {
 
 export const writePreferences = (pref: Preferences) => {
   const path = remote.require('path');
+  const process = remote.require('process');
   const appPath = remote.app.getAppPath();
-  const p = path.resolve(appPath, './settings/files.json');
+  const dirname = process.env.NODE_ENV ? appPath : process.resourcesPath;
+
+  const p = path.resolve(dirname, 'extraResources', 'settings', 'files.json');
   readfile(p)
     .then(data => {
       const paths = JSON.parse(data);

@@ -24,8 +24,18 @@ export default function counter(
 export const createPreferences = () => {
   const path = remote.require('path');
   const appPath = remote.app.getAppPath();
-  const filePath = path.resolve(appPath, './settings/defaultSettings.json');
-  const json = remote.require('fs').readFileSync(filePath, 'utf-8');
+  const fs = remote.require('fs');
+  const process = remote.require('process');
+
+  const dirname = process.env.NODE_ENV ? appPath : process.resourcesPath;
+  const filePath = path.resolve(
+    dirname,
+    'extraResources',
+    'settings',
+    'defaultSettings.json'
+  );
+
+  const json = fs.readFileSync(filePath, 'utf-8');
   if (!json) {
     throw new Error("setting file didn't be find.");
   }

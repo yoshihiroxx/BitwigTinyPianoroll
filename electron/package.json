@@ -100,7 +100,14 @@
       "owner": "electron-react-boilerplate",
       "repo": "electron-react-boilerplate",
       "private": false
-    }
+    },
+    "extraResources": [{
+      "from": "./app/extraResources/",
+      "to": "extraResources",
+      "filter": [
+        "**/*"
+      ]
+    }]
   },
   "repository": {
     "type": "git",
