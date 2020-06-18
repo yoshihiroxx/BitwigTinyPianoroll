@@ -1,6 +1,5 @@
 import { Action } from 'redux';
 import { remote } from 'electron';
-import path from 'path';
 import { INCREMENT_COUNTER, DECREMENT_COUNTER } from '../actions/counter';
 import { SET_PREFERENCES, SET_THEME } from '../actions/preferences';
 import Preferences from '../models/Preferences';
@@ -23,7 +22,9 @@ export default function counter(
 }
 
 export const createPreferences = () => {
-  const filePath = path.resolve(__dirname, './settings/defaultSettings.json');
+  const path = remote.require('path');
+  const appPath = remote.app.getAppPath();
+  const filePath = path.resolve(appPath, './settings/defaultSettings.json');
   const json = remote.require('fs').readFileSync(filePath, 'utf-8');
   if (!json) {
     throw new Error("setting file didn't be find.");

@@ -86,7 +86,7 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     super(props);
     this.isTreble = true;
     this.state = {
-      octave: 9,
+      octave: 4,
       magnet: true,
       scales: Scales
     };
@@ -341,12 +341,11 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
 
     const offsetOctave = Math.floor(offsetFromRootNote / 7) * 12;
     const rootNoteNum = 12 * octave;
-    return (
-      rootNoteNum +
-      offsetOctave +
-      scaleIndex +
-      this.scale.signatures[this.scale.gridIndices[scaleIndex]]
-    );
+    let semitoneOffset = this.scale.signatures[
+      this.scale.gridIndices[scaleIndex]
+    ];
+    semitoneOffset = semitoneOffset < 0 ? 0 : semitoneOffset;
+    return rootNoteNum + offsetOctave + scaleIndex + semitoneOffset;
   }
 
   private getCurrentTool() {
@@ -601,7 +600,19 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
         rect.beginFill(color);
         rect.lineStyle(1, 0x333333);
       }
-      rect.drawRect(x, y + 1, note.get('lengthInBeats') * width, height - 2);
+
+      if (y + 1 + height - 2 > this.domSize.y) {
+        rect.drawRect(
+          x,
+          this.domSize.y - 1,
+          note.get('lengthInBeats') * width,
+          3
+        );
+      } else if (y < 0) {
+        rect.drawRect(x, 0, note.get('lengthInBeats') * width, 3);
+      } else {
+        rect.drawRect(x, y + 1, note.get('lengthInBeats') * width, height - 2);
+      }
       rect.alpha = 0.9;
       rect.endFill();
 
@@ -619,15 +630,15 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
       const style = new pixi.TextStyle({
         fontFamily: 'Arial',
         fontSize: 11,
-        fontWeight: 'normal',
-        fill: [theme.pianoroll.notes.text.value] // gradient
-        //   // stroke: '#332244',
-        //   // strokeThickness: 5
+        fontWeight: 'bold',
+        fill: [theme.pianoroll.notes.text.value], // gradient
+        stroke: '#ffffff',
+        strokeThickness: 3
       });
       const keyNameText = new pixi.Text(keyName, style);
 
-      keyNameText.x = x + 1;
-      keyNameText.y = y + 1;
+      keyNameText.x = x + 4;
+      keyNameText.y = y - 1;
       keyNameText.alpha = theme.pianoroll.notes.text.alpha;
 
       const noteEdge = new pixi.Graphics();

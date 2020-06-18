@@ -1,5 +1,4 @@
 import { remote } from 'electron';
-import path from 'path';
 import Theme from '../models/Theme';
 import Preferences from '../models/Preferences';
 import { GetState, Dispatch } from '../reducers/types';
@@ -16,12 +15,14 @@ const readfile = (_path: string) => {
 };
 
 export const writePreferences = (pref: Preferences) => {
-  const p = path.resolve(__dirname, './settings/files.json');
+  const path = remote.require('path');
+  const appPath = remote.app.getAppPath();
+  const p = path.resolve(appPath, './settings/files.json');
   readfile(p)
     .then(data => {
       const paths = JSON.parse(data);
       const settingFilePath = path.resolve(
-        __dirname,
+        appPath,
         `./settings/${paths.files.settings}`
       );
       remote

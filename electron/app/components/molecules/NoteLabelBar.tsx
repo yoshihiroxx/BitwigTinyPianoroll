@@ -22,7 +22,7 @@ export default function NoteLabelBar(props: Props) {
         <li>{`D${octave + 1}`}</li>
         <li>{`B${octave}`}</li>
         <li>{`G${octave}`}</li>
-        <li>{`A${octave}`}</li>
+        <li>{`E${octave}`}</li>
         <li>{`C${octave}`}</li>
       </ul>
     </div>
