@@ -148,7 +148,6 @@ export default class MenuBuilder {
                 defaultPath: 'untitled.mid'
               })
               .then(result => {
-                console.log(result);
                 if (result.canceled) return true;
                 this.appWindows.editWindow.webContents.send(
                   'export-clip',

@@ -2,8 +2,7 @@ import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import PreferencesComponent from '../components/templates/Preferences';
 import { increment } from '../actions/counter';
-import { counterStateType } from '../reducers/types';
-import { ModelType } from '../models/ModelCreator';
+import { ModelType } from '../reducers/types';
 
 function mapStateToProps(state: ModelType) {
   return {

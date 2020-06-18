@@ -6,17 +6,12 @@ import Root from './containers/Root';
 import { configureStore, history } from './store/configureStore';
 import './app.global.css';
 import { loadMidiFile } from './actions/debug';
-import Model from './models/ModelCreator';
-import Project from './models/Project';
 import { onLoadMidiFile, onCreateNewMidiFile } from './actions/menuEvents';
 import { onChangeTheme, onChangePreferences } from './actions/preferences';
-// import initMainMenu from './menu/MainMenu';
 import MidiWriter from './midi/MidiWriter';
 import MidiClip from './models/MidiClip';
 
 const store = configureStore();
-
-// initMainMenu(store);
 
 const menu = new remote.Menu();
 menu.append(
@@ -40,12 +35,6 @@ window.addEventListener(
   },
   false
 );
-
-ipcRenderer.send('test');
-ipcRenderer.on('test', (event, arg) => {
-  console.log('ipc connection test : ');
-  console.log(arg);
-});
 
 ipcRenderer.on('update-preferences', (event, arg) => {
   // @todo update preferences
@@ -71,7 +60,6 @@ ipcRenderer.on('export-clip', (event, filePath) => {
   const midiClip = new MidiClip().set('midiList', ml);
   const buffer = writer.buildFromClip(midiClip);
   const fs = remote.require('fs');
-  console.log(fs);
   fs.writeFileSync(filePath, Buffer.from(buffer));
 });
 

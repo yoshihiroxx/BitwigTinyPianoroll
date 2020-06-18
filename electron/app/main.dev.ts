@@ -85,10 +85,3 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (windowManager.windows.mainWindow === null) createWindow();
 });
-
-ipcMain.on('test', event => {
-  event.sender.send('test', {
-    appName: 'hoge',
-    appVersion: '1'
-  });
-});

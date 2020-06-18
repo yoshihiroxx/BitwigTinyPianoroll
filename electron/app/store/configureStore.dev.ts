@@ -6,8 +6,7 @@ import { createLogger } from 'redux-logger';
 import createRootReducer from '../reducers';
 import * as counterActions from '../actions/counter';
 import * as debugActions from '../actions/debug';
-import { counterStateType } from '../reducers/types';
-import { ModelType } from '../models/ModelCreator';
+import { ModelType } from '../reducers/types';
 
 declare global {
   interface Window {

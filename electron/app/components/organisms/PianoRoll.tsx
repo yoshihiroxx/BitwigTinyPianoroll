@@ -250,7 +250,6 @@ export default class Pianoroll extends React.Component<PianorollStateType> {
     const { octave } = this.state;
     this.setState({ octave: octave + applyValue });
     const nextOctave = octave + applyValue;
-    console.log(nextOctave);
     if (nextOctave > 9) this.setState({ octave: 9 });
     else if (nextOctave < 0) this.setState({ octave: 0 });
     else this.setState({ octave: nextOctave });

@@ -3,8 +3,7 @@ import thunk from 'redux-thunk';
 import { createHashHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import createRootReducer from '../reducers';
-import { Store } from '../reducers/types';
-import { ModelType } from '../models/ModelCreator';
+import { Store, ModelType } from '../reducers/types';
 
 const history = createHashHistory();
 const rootReducer = createRootReducer(history);

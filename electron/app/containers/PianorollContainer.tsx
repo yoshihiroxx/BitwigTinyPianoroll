@@ -1,12 +1,9 @@
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import Pianoroll, {
-  PianorollStateType
-} from '../components/organisms/PianoRoll';
+import Pianoroll from '../components/organisms/PianoRoll';
 import { handleTool, onMouseEvent } from '../actions/tool';
 import { onKeyDown, onKeyUp } from '../actions/keyEvents';
-import MidiClip from '../models/MidiClip';
-import { ModelType } from '../models/ModelCreator';
+import { ModelType } from '../reducers/types';
 
 function mapStateToProps(state: ModelType) {
   return {
