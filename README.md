@@ -1,9 +1,11 @@
+![icon_128x128](https://user-images.githubusercontent.com/18275046/85196852-fbe61100-b317-11ea-934c-e985d523932c.png)
+
 # Bitwig Tiny Piarnoroll
 
 Bitwig Tiny Pianoroll is free software to editing MIDI data rapidly.
 
 ## Features
----
+![ui-clip](https://user-images.githubusercontent.com/18275046/85196802-aa3d8680-b317-11ea-8a2a-9d571fd9a420.gif)
 ### The Interface between Pianoroll and Score.
 - Save the 40% vertical spaces.  
 Score interfaces can indicates 12 notes in  7 row. You can save the 40% vertical spaces than other several pianorolls.
@@ -31,3 +33,13 @@ The application connect to Bitwig via OSC.
 - Copy Tool/ **Option(Hold) + Drag Selections**
 
 ## Download
+[Download here](https://github.com/yoshihiroxx/BitwigTinyPianoroll/releases)
+
+
+## Starting Develop
+```
+cd electron
+yarn dev
+```
+check the below link for more details.  
+https://github.com/yoshihiroxx/BitwigTinyPianoroll/tree/master/electron
