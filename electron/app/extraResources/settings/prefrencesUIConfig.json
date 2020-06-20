@@ -1,0 +1,83 @@
+{
+  "tabs":{
+    "theme":{
+      "pianoroll":{
+        "background":{
+          "title":"Background",
+          "inputs":[
+            {
+              "title":"Background",
+              "description":"",
+              "type":"color",
+              "keys":["pianoroll", "background"]
+            }
+          ]
+        },
+        "notes":{
+          "title":"Notes",
+          "inputs":[
+            {
+              "title":"Text",
+              "description":"",
+              "type":"color",
+              "keys":["pianoroll", "notes", "text"]
+            },
+            {
+              "title":"Common",
+              "description":"",
+              "type":"color",
+              "keys":["pianoroll", "notes", "common"]
+            },
+            {
+              "title":"Selection",
+              "description":"",
+              "type":"color",
+              "keys":["pianoroll", "notes", "selection"]
+            },
+            {
+              "title":"Drawing",
+              "description":"",
+              "type":"color",
+              "keys":["pianoroll", "notes", "drawing"]
+            }
+          ]
+        },
+        "lines":{
+          "title":"Lines",
+          "inputs":[
+            {
+              "title":"Horizontal Main",
+              "description":"Notation line color",
+              "type":"color",
+              "keys":["pianoroll", "lines", "horizontal", "main"]
+            },
+            {
+              "title":"Horizontal Sub",
+              "description":"The color of horizontal sub lines.",
+              "type":"color",
+              "keys":["pianoroll", "lines", "horizontal", "sub"]
+            },
+            {
+              "title":"Quarter",
+              "description":"vertical lines color strokes each quarter beat",
+              "type":"color",
+              "keys":["pianoroll", "lines", "vertical", "quarter"]
+            },
+            {
+              "title":"Beat",
+              "description":"A vertical line color strokes each beat.",
+              "type":"color",
+              "keys":["pianoroll", "lines", "vertical", "beat"]
+            },
+            {
+              "title":"Bar",
+              "description":"A vertical line color strokes each bar.",
+              "type":"color",
+              "keys":["pianoroll", "lines", "vertical", "bar"]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

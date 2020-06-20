@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="29px" height="29px" viewBox="0 0 29 29" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icons/eraser</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icons/eraser" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="near_me-24px" transform="translate(7.500000, 7.500000) scale(-1, 1) translate(-7.500000, -7.500000) ">
+            <polygon id="Shape" points="0 0 15 0 15 15 0 15"></polygon>
+            <polygon id="Shape" stroke="#000000" fill="#E0E0E0" fill-rule="nonzero" stroke-linecap="round" stroke-linejoin="round" points="13 2 2 6.60166667 2 7.20055556 6.18 8.82 7.79333333 13 8.39222222 13"></polygon>
+        </g>
+        <g id="cancel-24px" transform="translate(8.000000, 7.000000)">
+            <path d="M10.5,2 C5.7995,2 2,5.7995 2,10.5 C2,15.2005 5.7995,19 10.5,19 C15.2005,19 19,15.2005 19,10.5 C19,5.7995 15.2005,2 10.5,2 Z M14.75,13.5515 L13.5515,14.75 L10.5,11.6985 L7.4485,14.75 L6.25,13.5515 L9.3015,10.5 L6.25,7.4485 L7.4485,6.25 L10.5,9.3015 L13.5515,6.25 L14.75,7.4485 L11.6985,10.5 L14.75,13.5515 Z" id="Shape" stroke="#000000" fill="#E0E0E0" fill-rule="nonzero"></path>
+            <polygon id="Shape" points="0 0 20 0 20 20 0 20"></polygon>
+        </g>
+    </g>
+</svg>

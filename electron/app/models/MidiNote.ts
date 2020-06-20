@@ -1,14 +1,14 @@
 import { Record, List } from 'immutable';
 
 const MidiNoteRecord = Record({
-  note_number: 0,
-  start_beat: 0,
-  length_in_beats: 1,
+  noteNumber: 0,
+  startBeat: 0,
+  lengthInBeats: 0.25,
   velocity: 60
 });
 
 export default class MidiNote extends MidiNoteRecord {
   setVelocity(velocity: number) {
-    return this.set('start_beat', velocity);
+    return this.set('startBeat', velocity);
   }
 }

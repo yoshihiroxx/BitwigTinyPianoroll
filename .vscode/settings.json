@@ -1,0 +1,8 @@
+{
+  "files.exclude": {
+    "electron/node_modules": true,
+    "electron/.github": true,
+    "electron/.vscode": true,
+    "electron/configs": true,
+  }
+}

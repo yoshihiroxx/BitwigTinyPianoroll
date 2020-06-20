@@ -1,0 +1,9 @@
+.ruler {
+  width: 100%;
+}
+
+.ruler canvas {
+  width: 100%;
+  height: 18px;
+  vertical-align: bottom;
+}

@@ -1,7 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
+import PrefSelect from '../atoms/PrefSelect';
+import PrefTabPanel from '../atoms/PrefTabPanel';
+import PrefAppBar from '../atoms/PrefAppBar';
+
 import styles from './Preferences.css';
 import routes from '../../constants/routes.json';
+import Preferences from '../../models/Preferences';
+import PrefThemeTabPanel from '../molecules/PrefThemeTabPanel';
+import Theme from '../../models/Theme';
 
 type Props = {
   increment: () => void;
@@ -9,23 +17,24 @@ type Props = {
   incrementAsync: () => void;
   decrement: () => void;
   counter: number;
+  preferences: Preferences;
 };
 
-export default function Preferences(props: Props) {
-  const {
-    increment,
-    incrementIfOdd,
-    incrementAsync,
-    decrement,
-    counter
-  } = props;
+function a11yProps(index: any) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`
+  };
+}
 
-  return (
-    <div>
-      <Link to={routes.HOME}>
-        <i className="fa fa-arrow-left fa-3x" />
-      </Link>
-      <span>Preferences</span>
-    </div>
-  );
+export default function PreferencesComponent(props: Props) {
+  const { preferences } = props;
+
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setValue(newValue);
+  };
+
+  return <div>Preferences does not support yet.</div>;
 }

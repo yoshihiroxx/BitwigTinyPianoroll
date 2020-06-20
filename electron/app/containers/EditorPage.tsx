@@ -7,11 +7,11 @@ import {
   incrementIfOdd,
   incrementAsync
 } from '../actions/counter';
-import { counterStateType } from '../reducers/types';
+import { ModelType } from '../reducers/types';
 
-function mapStateToProps(state: counterStateType) {
+function mapStateToProps(state: ModelType) {
   return {
-    counter: state.counter
+    clip: state.editor.project.tracks.getIn([0, 0])
   };
 }
 

@@ -1,0 +1,18 @@
+.settingBlock{
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #555;
+}
+
+.inputGroup {
+  margin-top:6px;
+}
+
+.settingBlock span{
+  color:#777;
+}
+
+.input {
+  margin-top:3px;
+  margin-bottom: 24px;
+}

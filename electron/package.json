@@ -1,8 +1,8 @@
 {
   "name": "electron-react-boilerplate",
-  "productName": "ElectronReact",
+  "productName": "TinyPianoroll",
   "version": "1.1.0",
-  "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "description": "TinyPianoroll gives way to editing midi file. this is the alpha version. We will support editing clips on bitwig.",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
     "build-dll": "cross-env NODE_ENV=development webpack --config ./configs/webpack.config.renderer.dev.dll.babel.js --colors",
@@ -53,8 +53,8 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.develar.ElectronReact",
+    "productName": "TinyPianoroll",
+    "appId": "org.develar.TinyPianoroll",
     "files": [
       "dist/",
       "node_modules/",
@@ -100,7 +100,14 @@
       "owner": "electron-react-boilerplate",
       "repo": "electron-react-boilerplate",
       "private": false
-    }
+    },
+    "extraResources": [{
+      "from": "./app/extraResources/",
+      "to": "extraResources",
+      "filter": [
+        "**/*"
+      ]
+    }]
   },
   "repository": {
     "type": "git",
@@ -275,6 +282,9 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@hot-loader/react-dom": "^16.13.0",
+    "@material-ui/core": "^4.10.0",
+    "@material-ui/styles": "^4.10.0",
+    "@material-ui/system": "^4.9.14",
     "connected-react-router": "^6.6.1",
     "core-js": "^3.6.4",
     "devtron": "^1.4.0",
@@ -284,6 +294,7 @@
     "history": "^4.10.1",
     "immutable": "^4.0.0-rc.12",
     "midi-parser-js": "^4.0.4",
+    "pixi.js": "^5.2.4",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-hot-loader": "^4.12.19",
@@ -291,6 +302,7 @@
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.5",
+    "redux-immutable": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "source-map-support": "^0.5.16"
   },

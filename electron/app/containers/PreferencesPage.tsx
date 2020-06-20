@@ -1,30 +1,25 @@
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import Preferences from '../components/templates/Preferences';
-import {
-  increment,
-  decrement,
-  incrementIfOdd,
-  incrementAsync
-} from '../actions/counter';
-import { counterStateType } from '../reducers/types';
+import PreferencesComponent from '../components/templates/Preferences';
+import { increment } from '../actions/counter';
+import { ModelType } from '../reducers/types';
 
-function mapStateToProps(state: counterStateType) {
+function mapStateToProps(state: ModelType) {
   return {
-    counter: state.counter
+    preferences: state.preferences
   };
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return bindActionCreators(
     {
-      increment,
-      decrement,
-      incrementIfOdd,
-      incrementAsync
+      increment
     },
     dispatch
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Preferences);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PreferencesComponent);

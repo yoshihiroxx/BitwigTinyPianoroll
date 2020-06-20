@@ -1,0 +1,152 @@
+{
+  "sequencer": {
+    "ppq": 960
+  },
+  "osc": {
+    "clientMode": "bitwig",
+    "isEnabled": true,
+    "clientPort": "",
+    "serverPort": ""
+  },
+  "keyBinds": {
+    "eraser": {
+      "metaKey": false,
+      "altKey": true,
+      "shiftKey": false,
+      "codes": [
+        18
+      ]
+    },
+    "rect": {
+      "metaKey": true,
+      "altKey": false,
+      "shiftKey": false,
+      "codes": [
+        91,
+        93
+      ]
+    },
+    "copy": {
+      "metaKey": true,
+      "altKey": false,
+      "shiftKey": false,
+      "codes": [
+        67
+      ]
+    },
+    "paste": {
+      "metaKey": true,
+      "altKey": false,
+      "shiftKey": false,
+      "codes": [
+        80
+      ]
+    },
+    "pitchUp": {
+      "metaKey": false,
+      "altKey": false,
+      "shiftKey": false,
+      "codes": [
+        38
+      ]
+    },
+    "pitchDown": {
+      "metaKey": false,
+      "altKey": false,
+      "shiftKey": false,
+      "codes": [
+        40
+      ]
+    },
+    "increaseBeat": {
+      "metaKey": false,
+      "altKey": false,
+      "shiftKey": false,
+      "codes": [
+        39
+      ]
+    },
+    "decreaseBeat": {
+      "metaKey": false,
+      "altKey": false,
+      "shiftKey": false,
+      "codes": [
+        37
+      ]
+    },
+    "removeNotes": {
+      "metaKey": false,
+      "altKey": false,
+      "shiftKey": false,
+      "codes": [
+        8
+      ]
+    },
+    "keepSelectionNotes": {
+      "metaKey": false,
+      "altKey": true,
+      "shiftKey": false,
+      "codes": [
+        18
+      ]
+    }
+  },
+  "theme": {
+    "pianoroll": {
+      "background": {
+        "alpha": 1,
+        "value": 3355962
+      },
+      "lines": {
+        "horizontal": {
+          "main": {
+            "alpha": 1,
+            "value": 7571927
+          },
+          "sub": {
+            "alpha": 1,
+            "value": 4344944
+          }
+        },
+        "vertical": {
+          "bar": {
+            "alpha": 1,
+            "value": 7571927
+          },
+          "beat": {
+            "alpha": 1,
+            "value": 5397648
+          },
+          "quarter": {
+            "alpha": 1,
+            "value": 4344934
+          }
+        }
+      },
+      "notes": {
+        "common": {
+          "alpha": 1,
+          "value": 7994011
+        },
+        "drawing": {
+          "alpha": 1,
+          "value": 16428665
+        },
+        "selection": {
+          "alpha": 1,
+          "value": 11438335
+        },
+        "text": {
+          "alpha": 0.8,
+          "value": 0
+        }
+      }
+    }
+  },
+  "output": {
+    "defaultDirectory": "./",
+    "midi": {
+      "formatType": 1
+    }
+  }
+}

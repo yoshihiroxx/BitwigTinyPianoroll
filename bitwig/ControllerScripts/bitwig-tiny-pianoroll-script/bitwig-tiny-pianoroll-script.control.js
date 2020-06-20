@@ -56,7 +56,6 @@ function init() {
    tp.getPosition().markInterested();
    tp.getPosition().addValueObserver( function(value){
       println(value);
-      // clip.setName("hoge");
    });
    println("bitwig-tiny-pianoroll-script initialized!");
 }

@@ -1,0 +1,38 @@
+.container {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+  background: #3A3C43;
+  padding: 3px 0;
+  padding-top:4px;
+  width: 100%;
+  font-size: 12px;
+  color: #999;
+  display: flex;
+}
+
+.container > span {
+  margin-left: 8px;
+}
+
+.buttonGroup{
+  margin-right: auto;
+}
+
+.button{
+  border-style: none;
+  background: none;
+  border-radius: 15px;
+  -webkit-app-region: no-drag;
+  -webkit-user-select: none;
+}
+
+.button > img{
+  width: 12px;
+  -webkit-user-select: none;
+  -webkit-app-region: no-drag;
+}
+
+.button:hover{
+  opacity: 0.8;
+  background:rgba(0, 0, 0, 0.2);
+}

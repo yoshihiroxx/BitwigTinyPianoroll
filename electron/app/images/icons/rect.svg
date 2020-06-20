@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icons/rect</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icons/rect" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="crop_free-24px">
+            <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
+            <path d="M5.5,5.5 L5.5,9.5 L2.5,9.5 L2.5,5 C2.5,3.62385763 3.62385763,2.5 5,2.5 L9.5,2.5 L9.5,5.5 L5.5,5.5 Z M5.5,18.5 L9.5,18.5 L9.5,21.5 L5,21.5 C3.62385763,21.5 2.5,20.3761424 2.5,19 L2.5,14.5 L5.5,14.5 L5.5,18.5 Z M18.5,18.5 L18.5,14.5 L21.5,14.5 L21.5,19 C21.5,20.3761424 20.3761424,21.5 19,21.5 L14.5,21.5 L14.5,18.5 L18.5,18.5 Z M18.5,5.5 L14.5,5.5 L14.5,2.5 L19,2.5 C20.3761424,2.5 21.5,3.62385763 21.5,5 L21.5,9.5 L18.5,9.5 L18.5,5.5 Z" id="Shape" stroke="#000000" fill="#E0E0E0" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>

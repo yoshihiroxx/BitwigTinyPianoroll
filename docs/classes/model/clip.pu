@@ -1,12 +1,16 @@
 @startuml
 
 
-class Track {
+class TrackRecord {
+    - channel : number
+    + name: string
+}
 
+class Track {
 }
 
 class MidiListRecord {
-    notes
+    - notes : Note
 }
 
 class MidiList {
@@ -15,62 +19,67 @@ class MidiList {
     removeNote()
 }
 
+
 class ClipRecord {
-    - name
-    - bpm
-    - bars
-    - arr[4] time_signature
-    - events
-    - time_division
+    + name : string
+    + lengthInBeats : number
+    + loopLengthInBeats: number
+    - color: Array<number>
 }
 
-class Clip {
+
+class MidiClipRecord {
+    - midiList : MidiList
 }
+
 
 class MidiClip {
-
+    + constructor(parsedMidi?: MidiFile)
+    - updateByMidiFile
 }
 
 class NoteRecord {
-    - start_beat : float
-    - length_in_beats : float
-    - note_number : int
-    - velocity : int
-    - color : array[3] 
+    - startBeat : number
+    - lengthInBeats : number
+    - noteNumber : number
+    - velocity : number
+    - color : List[3]<number> 
 }
 
-class Note {
+class MidiNote {
     getStartBeat()
     getEndBeat()
     getLengthBeat()
 }
 
-class Shaping {
-    addNote()
-}
-
-class BitwigShaping {
-    osc
-    cfg.grid_num_x
-    cfg.grid_num_y
-    addNote()
+class Editor {
+    + clipID : number
 }
 
 
+Store o-- Project
+Project "1" o-- "0..*" Track
+Store o-- Editor
+Editor o-- ClipRecord
+Editor o-- Tool
+Tool <-- PenTool
+Tool <-- MoveTool
+Tool <-- EraserTool
+Tool <-- SelectTool
 
-Shaping <-- AbletonShaping
-Shaping <-- BitwigShaping
-ClipRecord <-- Clip
-Clip o-- Shaping
-Client o-- Track
-Clip <-- MidiClip
-Clip <-- AudioClip
-Track o-- ClipRecord
 
-MidiListRecord o-- NoteRecord
-NoteRecord <-- Note
+TrackRecord <-- Track
+Track "1" o-- "0..*" ClipRecord
 
-ClipRecord o-- MidiListRecord
+
+ClipRecord <-- MidiClipRecord
+MidiClipRecord <-- MidiClip
+ClipRecord <-- AudioClip
+
+MidiList "1" o-- "0..*" MidiNote
+NoteRecord <-- MidiNote
+
+MidiClip o-- MidiList
 MidiListRecord <-- MidiList
 
 @enduml
