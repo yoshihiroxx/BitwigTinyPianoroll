@@ -4,7 +4,7 @@ var Config = {};
 Config.receive_host = "127.0.0.1";
 Config.receive_host_port = "1234";
 Config.send_host = "127.0.0.1";
-Config.send_host_port = "1235";
+Config.send_host_port = "3044";
 
 Config.init = function(){
     var prefs = host.getPreferences();

@@ -101,13 +101,15 @@
       "repo": "electron-react-boilerplate",
       "private": false
     },
-    "extraResources": [{
-      "from": "./app/extraResources/",
-      "to": "extraResources",
-      "filter": [
-        "**/*"
-      ]
-    }]
+    "extraResources": [
+      {
+        "from": "./app/extraResources/",
+        "to": "extraResources",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
   },
   "repository": {
     "type": "git",
@@ -151,7 +153,8 @@
     "testURL": "http://localhost/",
     "moduleNameMapper": {
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/internals/mocks/fileMock.js",
-      "\\.(css|less|sass|scss)$": "identity-obj-proxy"
+      "\\.(css|less|sass|scss)$": "identity-obj-proxy",
+      "electron":"<rootDir>/test/mock/electron.ts"
     },
     "moduleFileExtensions": [
       "js",
@@ -283,6 +286,7 @@
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@hot-loader/react-dom": "^16.13.0",
     "@material-ui/core": "^4.10.0",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@material-ui/styles": "^4.10.0",
     "@material-ui/system": "^4.9.14",
     "connected-react-router": "^6.6.1",
@@ -294,6 +298,8 @@
     "history": "^4.10.1",
     "immutable": "^4.0.0-rc.12",
     "midi-parser-js": "^4.0.4",
+    "osc": "^2.4.1",
+    "osc-js": "^2.1.0",
     "pixi.js": "^5.2.4",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",

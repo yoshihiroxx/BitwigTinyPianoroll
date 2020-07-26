@@ -14,6 +14,9 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import WindowManager from './managers/WindowManager';
+import OscManager from './managers/OscManager';
+import { IPCArgments } from './reducers/types';
+import GeneralPref from './models/GeneralPref';
 
 export default class AppUpdater {
   constructor() {
@@ -46,6 +49,54 @@ const installExtensions = async () => {
 };
 
 const windowManager = new WindowManager();
+const oscManager = new OscManager();
+oscManager.open();
+
+windowManager.on('open-oscport', generalPref => {
+  const g = generalPref;
+  oscManager.initOSCServer(
+    g.clientHost,
+    g.clientPort,
+    g.serverHost,
+    g.serverPort
+  );
+  oscManager.open();
+});
+
+windowManager.on('close-oscport', () => {
+  oscManager.close();
+});
+
+oscManager.on('ipc-send-to-all-windows', (args: IPCArgments) => {
+  windowManager.sendIpcMessageToAllWindows(
+    '/v1/tinypianoroll/oscclip/notes',
+    args
+  );
+});
+
+ipcMain.on('/v1/tinypianoroll/preferences', (e, args: any) => {
+  const g: GeneralPref = args.payload.general;
+  const mode = args.payload.general.clientMode;
+  if (mode === '') {
+    oscManager.close();
+  } else if (mode === 'bitwig') {
+    oscManager.initOSCServer(
+      g.clientHost,
+      g.clientPort,
+      g.serverHost,
+      g.serverPort
+    );
+    oscManager.open();
+  }
+  windowManager.sendIpcMessageToAllWindows(
+    '/v1/tinypianoroll/preferences',
+    args
+  );
+});
+
+ipcMain.on('update-theme', (e, themeObj) => {
+  windowManager.sendIpcMessageToAllWindows('update-theme', themeObj);
+});
 
 const popPrefWindow = () => {
   windowManager.popPrefWindow();

@@ -1,0 +1,158 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`actions should increment should create increment action 1`] = `
+Immutable.Record {
+  "sequencer": Object {
+    "ppq": 960,
+  },
+  "general": Immutable.Record {
+    "clientMode": "bitwig",
+    "isEnabled": true,
+    "clientHost": "127.0.0.1",
+    "clientPort": 3301,
+    "serverHost": "127.0.0.1",
+    "serverPort": 3330,
+  },
+  "keyBinds": Immutable.Record {
+    "eraser": Object {
+      "altKey": true,
+      "codes": Array [
+        18,
+      ],
+      "metaKey": false,
+      "shiftKey": false,
+    },
+    "rect": Object {
+      "altKey": false,
+      "codes": Array [
+        91,
+        93,
+      ],
+      "metaKey": true,
+      "shiftKey": false,
+    },
+    "copy": Object {
+      "altKey": false,
+      "codes": Array [
+        67,
+      ],
+      "metaKey": true,
+      "shiftKey": false,
+    },
+    "paste": Object {
+      "altKey": false,
+      "codes": Array [
+        80,
+      ],
+      "metaKey": true,
+      "shiftKey": false,
+    },
+    "pitchUp": Object {
+      "altKey": false,
+      "codes": Array [
+        38,
+      ],
+      "metaKey": false,
+      "shiftKey": false,
+    },
+    "pitchDown": Object {
+      "altKey": false,
+      "codes": Array [
+        40,
+      ],
+      "metaKey": false,
+      "shiftKey": false,
+    },
+    "increaseBeat": Object {
+      "altKey": false,
+      "codes": Array [
+        39,
+      ],
+      "metaKey": false,
+      "shiftKey": false,
+    },
+    "decreaseBeat": Object {
+      "altKey": false,
+      "codes": Array [
+        37,
+      ],
+      "metaKey": false,
+      "shiftKey": false,
+    },
+    "removeNotes": Object {
+      "altKey": false,
+      "codes": Array [
+        8,
+      ],
+      "metaKey": false,
+      "shiftKey": false,
+    },
+    "keepSelectionNotes": Object {
+      "altKey": true,
+      "codes": Array [
+        18,
+      ],
+      "metaKey": false,
+      "shiftKey": false,
+    },
+  },
+  "theme": Immutable.Record {
+    "pianoroll": Object {
+      "background": Object {
+        "alpha": 1,
+        "value": 4473924,
+      },
+      "lines": Object {
+        "horizontal": Object {
+          "main": Object {
+            "alpha": 0.7,
+            "value": 16777215,
+          },
+          "sub": Object {
+            "alpha": 0.4,
+            "value": 16777215,
+          },
+        },
+        "vertical": Object {
+          "bar": Object {
+            "alpha": 0.4,
+            "value": 16777215,
+          },
+          "beat": Object {
+            "alpha": 0.2,
+            "value": 16777215,
+          },
+          "quarter": Object {
+            "alpha": 0.2,
+            "value": 16777215,
+          },
+        },
+      },
+      "notes": Object {
+        "common": Object {
+          "alpha": 1,
+          "value": 3390361,
+        },
+        "drawing": Object {
+          "alpha": 1,
+          "value": 12320563,
+        },
+        "selection": Object {
+          "alpha": 1,
+          "value": 3399167,
+        },
+        "text": Object {
+          "alpha": 0.4,
+          "value": 0,
+        },
+      },
+    },
+  },
+  "output": Object {
+    "defaultDirectory": "./",
+    "midi": Object {
+      "formatType": 1,
+    },
+  },
+}
+`;

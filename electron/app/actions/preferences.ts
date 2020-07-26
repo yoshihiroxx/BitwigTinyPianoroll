@@ -1,12 +1,13 @@
-import { remote } from 'electron';
+import { remote, ipcRenderer } from 'electron';
 import Theme from '../models/Theme';
 import Preferences from '../models/Preferences';
-import { GetState, Dispatch } from '../reducers/types';
+import { GetState, Dispatch, IPCArgments } from '../reducers/types';
+import GeneralPref from '../models/GeneralPref';
 
 export const SET_PREFERENCES = 'SET_PREFERENCES';
 export const SET_THEME = 'SET_THEME';
 
-const readfile = (_path: string) => {
+export const readfile = (_path: string) => {
   return new Promise((resolve, reject) => {
     remote.require('fs').readFile(_path, 'utf-8', (err, data) => {
       return err ? reject(err) : resolve(data);
@@ -26,7 +27,8 @@ export const writePreferences = (pref: Preferences) => {
       const paths = JSON.parse(data);
       const settingFilePath = path.resolve(
         appPath,
-        `./settings/${paths.files.settings}`
+        `./settings/$
+        {paths.files.settings}`
       );
       remote
         .require('fs')
@@ -54,9 +56,44 @@ export function onChangePreferences(obj: any) {
     if (!obj) {
       throw new Error('must give the Preferences as a plane js object');
     }
-    const nextPreferences = new Preferences(obj);
+    let resolved = false;
+    setTimeout(() => {
+      if (!resolved) throw new Error('OSC server does not respond.');
+    }, 5000);
+
+    ipcRenderer.once(
+      '/v1/tinypianoroll/preferences',
+      (e, args: IPCArgments) => {
+        resolved = true;
+        const nextPreferences = new Preferences(obj);
+        writePreferences(nextPreferences);
+      }
+    );
+    ipcRenderer.send('/v1/tinypianoroll/preferences', {
+      type: 'set',
+      payload: obj.toJS(),
+      error: false
+    });
+  };
+}
+
+export function reloadPreferences() {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const state = getState();
+    onChangePreferences(state.preferences);
+  };
+}
+
+export function onChangeGeneralPref(obj: any) {
+  return (dispatch: Dispatch, getState: GetState) => {
     const { preferences } = getState();
-    writePreferences(preferences);
+    if (!obj) {
+      throw new Error('must give the Preferences as a plane js object');
+    }
+    const nextGeneralPref = new GeneralPref(obj);
+    const nextPreferences = preferences.set('general', nextGeneralPref);
+    writePreferences(nextPreferences);
+    dispatch(updatePreferences(nextPreferences));
   };
 }
 

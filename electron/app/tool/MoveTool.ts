@@ -22,7 +22,6 @@ export default class MoveTool extends Tool {
       return nextState.set('selections', selections).set('drawing', drawing);
     }
     if (typeof beatOrNote === 'number') {
-      console.log(beatOrNote);
       return this.setIn(['eventStart', 'beat'], beatOrNote).setIn(
         ['eventStart', 'noteNumber'],
         noteNumber

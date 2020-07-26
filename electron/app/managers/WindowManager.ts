@@ -1,13 +1,17 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
-import { AppWindowsType } from '../reducers/types';
+import { AppWindowsType, IPCArgments } from '../reducers/types';
+import GeneralPref, { GeneralPrefType } from '../models/GeneralPref';
+import OscManager from './OscManager';
+import Subscribable from './Subscribable';
 
-export default class WindowManager {
+export default class WindowManager extends Subscribable {
   rootPath: string;
 
   windows: AppWindowsType;
 
   constructor() {
+    super();
     this.rootPath =
       process.env.NODE_ENV === 'development'
         ? path.resolve(__dirname, '..')
@@ -17,18 +21,53 @@ export default class WindowManager {
       editWindow: null,
       prefWindow: null
     };
-    ipcMain.on('update-theme', (event, themeObj) => {
-      Object.keys(this.windows).forEach(key => {
-        if (this.windows[key] !== null) {
-          this.windows[key]?.webContents.send('update-theme', themeObj);
+
+    ipcMain.on(
+      '/v1/tinypianoroll/preferences/osc',
+      (event, args: IPCArgments) => {
+        const generalPref: GeneralPrefType = args.payload;
+        if (args.type === 'set') {
+          if (generalPref.clientMode === '') {
+            this.publish('close-oscport', null);
+          } else {
+            this.publish('open-oscport', generalPref);
+          }
+          this.sendIpcMessageToAllWindows(
+            '/v1/tinypianoroll/preferences/osc',
+            args
+          );
+        } else if (args.type === 'get') {
+          // @todo
         }
-      });
+      }
+    );
+
+    ipcMain.on('update-general-preferences', (event, generalPrefObj) => {
+      this.sendIpcMessageToAllWindows(
+        'update-general-preferences',
+        generalPrefObj
+      );
+      if (generalPrefObj.clientMode === '') {
+        this.publish('close-oscport', null);
+      } else {
+        this.publish('open-oscport', {
+          generalPrefObj
+        });
+      }
     });
   }
 
-  public createWindows() {
+  public createWindows(): void {
     this.createMainWindow();
     this.createEditWindow();
+  }
+
+  public sendIpcMessageToAllWindows(channel: string, args: IPCArgments): void {
+    Object.keys(this.windows).forEach(key => {
+      if (this.windows[key] !== null) {
+        this.windows[key]?.webContents.send(channel, args);
+      }
+    });
   }
 
   private createEditWindow() {

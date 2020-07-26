@@ -48,12 +48,6 @@ export default class LengthTool extends Tool {
         .get(0)
         .get('lengthInBeats')
     );
-    console.log(
-      nextState
-        .getIn(['drawing', 'notes'])
-        .get(0)
-        .get('lengthInBeats')
-    );
     return nextState;
   }
 

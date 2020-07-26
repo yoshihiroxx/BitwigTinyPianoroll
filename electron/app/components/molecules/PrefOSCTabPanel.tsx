@@ -1,15 +1,21 @@
 import React from 'react';
 import { TextField, Typography, Paper, Grid } from '@material-ui/core';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-
+import { makeStyles, createStyles, withStyles } from '@material-ui/core/styles';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import PrefButton from '../atoms/PrefButton';
 import PrefTabPanel from '../atoms/PrefTabPanel';
+import Theme from '../../models/Theme';
+import styles from './PrefThemeTabPanel.css';
+import UIConfig from '../../extraResources/settings/prefrencesUIConfig.json';
+import PrefTextField from '../atoms/PrefTextField';
+import GeneralPref from '../../models/GeneralPref';
 
 type Props = {
-  oscSettings: unknown;
+  state: GeneralPref;
   index: number;
   currentIndex: number;
-  theme: Theme;
+  onSave: () => void;
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -28,77 +34,133 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+const StyledToggleButton = withStyles({
+  selected: {
+    color: '#f0f',
+    background: 'black',
+    label: {
+      color: '#0fd'
+    }
+  }
+})(ToggleButton);
+
 export default function PrefThemeTabPanel(props: Props) {
-  const { index, currentIndex, oscSettings, theme } = props;
+  const { index, currentIndex, state, onSave } = props;
 
   const classes = useStyles();
 
+  const [editing, setEditing] = React.useState(state.general);
+
+  const [clientMode, setClientMode] = React.useState('bitwig');
+
+  const sections: Array<React.Component> = [];
+
   return (
     <PrefTabPanel value={currentIndex} index={index}>
-      <Paper>
-        <Typography>Pianoroll</Typography>
-        <Grid container spacing={1} className={classes.root}>
-          <Grid className={classes.paper} item xs={12}>
-            <TextField
-              id="outlined-basic"
-              label="value"
-              variant="outlined"
-              className={classes.input}
-            />
-            <TextField
-              id="outlined-basic"
-              label="alpha"
-              variant="outlined"
-              className={classes.input}
-            />
-          </Grid>
-          <Grid className={classes.paper} item xs={12}>
-            <TextField
-              id="outlined-basic"
-              label="ServerPort"
-              variant="outlined"
-              className={classes.input}
-            />
-          </Grid>
-          <Grid className={classes.paper} item xs={12}>
-            <TextField
-              id="outlined-basic"
-              label="ClientPort"
-              variant="outlined"
-              className={classes.input}
-            />
-          </Grid>
-          <Grid className={classes.paper} item xs={12}>
-            <PrefButton variant="contained" color="primary">
-              Test Connection
-            </PrefButton>
-          </Grid>
-        </Grid>
-      </Paper>
+      <Typography variant="h5">OSC</Typography>
 
-      <Grid container spacing={1} className={classes.root}>
-        <Grid className={classes.paper} item xs={6} spacing={3}>
-          <Paper className={classes.paper}>xs=6</Paper>
-        </Grid>
-        <Grid className={classes.paper} item xs={6} spacing={3}>
-          <Paper className={classes.paper}>xs=6</Paper>
-        </Grid>
+      <div className={styles.settingBlock}>
+        <Grid container spacing={2} className={styles.inputGroup}>
+          <Grid item xs={4}>
+            <Typography>Bitwig</Typography>
+          </Grid>
+          <Grid xs={8} item>
+            <Typography>OSC Mode</Typography>
+            <ToggleButtonGroup
+              value={editing.get('clientMode')}
+              exclusive
+              onChange={(e, newClientMode) => {
+                if (newClientMode !== null) {
+                  setEditing(editing.setIn(['clientMode'], newClientMode));
+                }
+              }}
+              aria-label="text alignment"
+            >
+              <ToggleButton value="bitwig" aria-label="left aligned">
+                Bitwig
+              </ToggleButton>
+              <StyledToggleButton value="" aria-label="centered">
+                <Typography>OFF</Typography>
+              </StyledToggleButton>
+              {/* <ToggleButton value="fl" aria-label="right aligned" disabled>
+                FL Studio
+              </ToggleButton>
+              <ToggleButton value="ableton" aria-label="justified" disabled>
+                Ableton
+              </ToggleButton> */}
+            </ToggleButtonGroup>
+            <Typography>Client</Typography>
+            <Grid container spacing={2}>
+              <Grid item xs={8}>
+                <PrefTextField
+                  className={styles.input}
+                  label="host"
+                  fullWidth
+                  size="small"
+                  defaultValue={editing.clientHost}
+                  onChange={e => {
+                    setEditing(editing.setIn(['clientHost'], e.target.value));
+                  }}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <PrefTextField
+                  className={styles.input}
+                  label="port"
+                  fullWidth
+                  size="small"
+                  defaultValue={editing.clientPort}
+                  onChange={e => {
+                    setEditing(
+                      editing.setIn(['clientPort'], Number(e.target.value))
+                    );
+                  }}
+                />
+              </Grid>
+            </Grid>
 
-        <Grid container item xs={12} spacing={3}>
-          <span>Client Mode</span>
-          <span>{oscSettings.osc.clientMode}</span>
-          <span>clientPort</span>
-          <span>{oscSettings.osc.clientPort}</span>
-          <span>serverPort</span>
-
-          <span>{oscSettings.osc.serverPort}</span>
-          <form noValidate autoComplete="off">
-            <PrefButton variant="contained" color="primary">
-              Save
-            </PrefButton>
-          </form>
+            <Typography>Server</Typography>
+            <Grid container spacing={2} className={styles.inputGroup}>
+              <Grid item xs={8}>
+                <PrefTextField
+                  className={styles.input}
+                  label="host"
+                  fullWidth
+                  size="small"
+                  defaultValue={editing.serverHost}
+                  onChange={e => {
+                    setEditing(editing.setIn(['serverHost'], e.target.value));
+                  }}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <PrefTextField
+                  className={styles.input}
+                  label="port"
+                  fullWidth
+                  size="small"
+                  defaultValue={editing.serverPort}
+                  onChange={e => {
+                    setEditing(
+                      editing.setIn(['serverPort'], Number(e.target.value))
+                    );
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
         </Grid>
-      </Grid>
+      </div>
+
+      <PrefButton
+        variant="contained"
+        color="primary"
+        onClick={() => {
+          onSave(state.set('general', editing));
+        }}
+      >
+        Save
+      </PrefButton>
     </PrefTabPanel>
   );
 }

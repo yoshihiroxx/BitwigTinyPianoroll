@@ -1,8 +1,8 @@
 import { bindActionCreators, Dispatch } from 'redux';
-import { connect } from 'react-redux';
-import PreferencesComponent from '../components/templates/Preferences';
-import { increment } from '../actions/counter';
+import { connect, ConnectedProps } from 'react-redux';
+import Preferences from '../components/templates/Preferences';
 import { ModelType } from '../reducers/types';
+import { onChangePreferences } from '../actions/preferences';
 
 function mapStateToProps(state: ModelType) {
   return {
@@ -13,13 +13,16 @@ function mapStateToProps(state: ModelType) {
 function mapDispatchToProps(dispatch: Dispatch) {
   return bindActionCreators(
     {
-      increment
+      onChangePreferences
     },
     dispatch
   );
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PreferencesComponent);
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export type Props = PropsFromRedux;
+
+export default connector(Preferences);

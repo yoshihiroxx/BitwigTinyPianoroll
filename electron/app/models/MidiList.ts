@@ -27,6 +27,23 @@ export default class MidiList extends MidiListRecord {
     return this.notes;
   }
 
+  public removeNote(note: MidiNote) {
+    const found = this.get('notes').find(n => {
+      return (
+        n.noteNumber === note.noteNumber &&
+        n.startBeat <= note.startBeat &&
+        n.startBeat + n.lengthInBeats >= note.startBeat + n.lengthInBeats
+      );
+    });
+    if (found instanceof MidiNote) {
+      const nextNotes = this.notes.filterNot((note: MidiNote) => {
+        return note.equals(found);
+      });
+      return this.set('notes', nextNotes);
+    }
+    return this;
+  }
+
   public hasNote(note: MidiNote) {
     const found = this.get('notes').find(n => {
       return n.equals(note);

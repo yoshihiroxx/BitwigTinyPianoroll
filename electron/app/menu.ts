@@ -87,13 +87,13 @@ export default class MenuBuilder {
         },
         { label: 'Show All', selector: 'unhideAllApplications:' },
         { type: 'separator' },
-        // {
-        //   label: 'Preferences',
-        //   accelerator: 'Command+,',
-        //   click: () => {
-        //     this.popPrefWindow();
-        //   }
-        // },
+        {
+          label: 'Preferences',
+          accelerator: 'Command+,',
+          click: () => {
+            this.popPrefWindow();
+          }
+        },
         { type: 'separator' },
         {
           label: 'Quit',

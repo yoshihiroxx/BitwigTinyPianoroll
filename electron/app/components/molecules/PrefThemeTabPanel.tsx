@@ -9,7 +9,7 @@ import PrefButton from '../atoms/PrefButton';
 import HexColorField from '../atoms/HexColorField';
 import AlphaColorField from '../atoms/AlphaField';
 import styles from './PrefThemeTabPanel.css';
-import UIConfig from '../../settings/prefrencesUIConfig.json';
+import UIConfig from '../../extraResources/settings/prefrencesUIConfig.json';
 
 type Props = {
   state: Theme;

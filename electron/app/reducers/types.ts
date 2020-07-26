@@ -26,5 +26,19 @@ export type ActionType = {
 };
 
 export type AppWindowsType = {
-  [index: string]: BrowserWindow;
+  [index: string]: BrowserWindow | null;
+};
+
+export type IPCArgments = {
+  type: string; // set or get
+  payload: any;
+  meta: any;
+  error: boolean;
+};
+
+export type OscArgments = {
+  type: string; // set or get
+  payload: any;
+  meta: any;
+  error: boolean;
 };

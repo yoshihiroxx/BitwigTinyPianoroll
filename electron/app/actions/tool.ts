@@ -1,11 +1,11 @@
 import { List } from 'immutable';
+import { ipcRenderer } from 'electron';
 import MidiClip from '../models/MidiClip';
 import MidiNote from '../models/MidiNote';
 import { PenTool, EraserTool, MoveTool, RectTool } from '../tool/Tools';
-
 import StretchTool from '../tool/StretchTool';
 import LengthTool from '../tool/LengthTool';
-import { GetState, Dispatch } from '../reducers/types';
+import { GetState, Dispatch, ActionType } from '../reducers/types';
 
 export const HANDLE_CLICK = 'HANDLE_CLICK';
 export const HANDLE_TOOL = 'HANDLE_TOOL';
@@ -17,6 +17,9 @@ export const REMOVE_NOTE = 'REMOVE_NOTE';
 export const CLEAR_SELECTIONS = 'CLEAR_SELECTIONS';
 export const SET_SELECTIONS = 'SET_SELECTIONS';
 export const SET_KEEP_SELECTIONS = 'SET_KEEP_SELECTIONS';
+export const FAILED_ADD_NOTE = 'FAILED_ADD_NOTE';
+
+const TIMEOUT = 5000;
 
 export function clearSelections() {
   return {
@@ -86,6 +89,58 @@ export function removeNote(note: MidiNote) {
   };
 }
 
+export function requestAddNote(note: MidiNote) {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const mode = getState().preferences.general.clientMode;
+    if (mode === '') {
+      dispatch(addNote(note));
+    } else if (mode === 'bitwig') {
+      ipcRenderer.send('/v1/bitwig/cursorclip/notes', {
+        type: 'set',
+        payload: note.toObject(),
+        meta: { actionType: 'SET_NOTE' },
+        error: false
+      });
+      dispatch(handleError());
+    }
+  };
+}
+export function requestRemoveNote(note: MidiNote) {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const mode = getState().preferences.general.clientMode;
+    if (mode === '') {
+      dispatch(removeNote(note));
+    } else if (mode === 'bitwig') {
+      ipcRenderer.send('/v1/bitwig/cursorclip/notes', {
+        type: 'set',
+        payload: note.toObject(),
+        meta: { actionType: 'CLEAR_NOTE' },
+        error: false
+      });
+      dispatch(handleError());
+    }
+  };
+}
+
+// @todo
+// export function reserveError(note: MidiNote) {
+//   return (dispatch: Dispatch, getState: GetState) => {
+//     setTimeout(() => {
+//     }, TIMEOUT);
+//   };
+// }
+
+export function handleError() {
+  return {
+    type: FAILED_ADD_NOTE,
+    pyaload: {},
+    meta: {
+      message: 'error occured'
+    },
+    error: true
+  };
+}
+
 export function setKeepSelections(value: boolean) {
   return {
     type: SET_KEEP_SELECTIONS,
@@ -109,30 +164,30 @@ function handleMouseRelease(
     const selections = tool.get('selections');
     if (tool instanceof EraserTool) {
       selections.get('notes').forEach((note: MidiNote) => {
-        dispatch(removeNote(note));
+        dispatch(requestRemoveNote(note));
       });
     } else if (tool instanceof MoveTool) {
       selections.get('notes').forEach((note: MidiNote) => {
-        if (!tool.get('shouldKeepSelection')) dispatch(removeNote(note));
+        if (!tool.get('shouldKeepSelection')) dispatch(requestRemoveNote(note));
       });
     } else if (tool instanceof LengthTool) {
       selections.get('notes').forEach((note: MidiNote) => {
-        dispatch(removeNote(note));
+        dispatch(requestRemoveNote(note));
       });
     }
 
     const drawing = editor.getIn(['tool', 'drawing']);
     if (tool instanceof PenTool) {
       drawing.get('notes').forEach((note: MidiNote) => {
-        dispatch(addNote(note));
+        dispatch(requestAddNote(note));
       });
     } else if (tool instanceof MoveTool) {
       drawing.get('notes').forEach((note: MidiNote) => {
-        dispatch(addNote(note));
+        dispatch(requestAddNote(note));
       });
     } else if (tool instanceof LengthTool) {
       drawing.get('notes').forEach((note: MidiNote) => {
-        dispatch(addNote(note));
+        dispatch(requestAddNote(note));
       });
     }
 

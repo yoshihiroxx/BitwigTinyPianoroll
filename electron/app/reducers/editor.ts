@@ -1,5 +1,6 @@
 import { Action } from 'redux';
 import { combineReducers } from 'redux-immutable';
+import { List } from 'immutable';
 import Editor from '../models/Editor';
 import project from './project';
 import tool from './tool';
@@ -17,6 +18,7 @@ import MidiClip from '../models/MidiClip';
 import MidiList, { createMidiListByMidiFile } from '../models/MidiList';
 import { ParsedMidi } from '../models/ParsedMidi';
 import { NEW_MIDIFILE } from '../actions/menuEvents';
+import MidiNote from '../models/MidiNote';
 
 type Actions =
   | ReturnType<typeof handleEvent>
@@ -62,11 +64,14 @@ function editReducer(state: Editor, action: Actions) {
     }
 
     case REMOVE_NOTE: {
-      let nextNotes = state.getIn(['tool', 'notes', 'notes']);
-      nextNotes = nextNotes.filterNot((note: MidiNote) => {
-        return note.equals(action.payload.note);
-      });
-      return state.setIn(['tool', 'notes', 'notes'], nextNotes);
+      // let nextNotes: List<MidiNote> = state.getIn(['tool', 'notes', 'notes']);
+      // nextNotes = nextNotes.filterNot((note: MidiNote) => {
+      //   return note.equals(action.payload.note);
+      // });
+      // return state.setIn(['tool', 'notes', 'notes'], nextNotes);
+      let nextNotes = state.getIn(['tool', 'notes']);
+      nextNotes = nextNotes.removeNote(action.payload.note);
+      return state.setIn(['tool', 'notes'], nextNotes);
     }
 
     case CLEAR_SELECTIONS: {

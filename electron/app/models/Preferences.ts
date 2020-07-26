@@ -1,18 +1,14 @@
 import { Record } from 'immutable';
 import KeyBinds from './KeyBinds';
 import Theme from './Theme';
+import GeneralPref from './GeneralPref';
 
 // @todo write tests
 export type PreferencesRecordType = {
   sequencer: {
     ppq: number;
   };
-  osc: {
-    clientMode: string;
-    isEnabled: boolean;
-    clientPort: string;
-    serverPort: string;
-  };
+  general: GeneralPref;
   keyBinds: KeyBinds;
   theme: Theme;
   output: {
@@ -27,12 +23,7 @@ const PreferencesRecord = Record<PreferencesRecordType>({
   sequencer: {
     ppq: 960
   },
-  osc: {
-    clientMode: 'bitwig',
-    isEnabled: true,
-    clientPort: '',
-    serverPort: ''
-  },
+  general: new GeneralPref(),
   keyBinds: new KeyBinds(),
   theme: new Theme(),
   output: {
