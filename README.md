@@ -1,6 +1,7 @@
 ![icon_128x128](https://user-images.githubusercontent.com/18275046/85196852-fbe61100-b317-11ea-934c-e985d523932c.png)
 
-# Bitwig Tiny Piarnoroll
+# Bitwig Tiny Piarnoroll 
+![Node.js CI](https://github.com/yoshihiroxx/BitwigTinyPianoroll/workflows/Node.js%20CI/badge.svg?branch=master)
 
 Bitwig Tiny Pianoroll is free software to editing MIDI data rapidly.
 
